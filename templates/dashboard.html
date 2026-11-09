@@ -1,0 +1,439 @@
+{% extends 'base.html' %}
+{% block title %}Dashboard - SILANG MAN 1 Jepara{% endblock %}
+
+{% block content %}
+<div class="row mb-4">
+    <div class="col-12">
+        <h2><i class="bi bi-speedometer2 me-2"></i>Dashboard</h2>
+        <p class="text-muted">Selamat datang, <strong>{{ user.get_full_name|default:user.username }}</strong> 
+           (<span class="role-badge bg-primary text-white">{{ user.get_role_display }}</span>)</p>
+    </div>
+</div>
+
+<!-- Statistik Cards -->
+{% if section == 'pelapor' %}
+<div class="row g-3 mb-4">
+    <div class="col-md-6">
+        <div class="card bg-info text-white">
+            <div class="card-body">
+                <h5 class="card-title"><i class="bi bi-chat-text me-2"></i>Total Pengaduan</h5>
+                <h3 class="mb-0">{{ total_pengaduan }}</h3>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="card bg-success text-white">
+            <div class="card-body">
+                <h5 class="card-title"><i class="bi bi-check-circle me-2"></i>Selesai</h5>
+                <h3 class="mb-0">{{ total_selesai }}</h3>
+            </div>
+        </div>
+    </div>
+</div>
+
+<h5><i class="bi bi-clock-history me-2"></i>Pengaduan Terkini Saya</h5>
+<div class="card">
+    <div class="card-body">
+        {% if my_pengaduan %}
+        <div class="table-responsive">
+            <table class="table table-hover align-middle">
+                <thead>
+                    <tr>
+                        <th>Judul</th>
+                        <th>Kategori</th>
+                        <th>Status</th>
+                        <th>Prioritas</th>
+                        <th>Tanggal</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for p in my_pengaduan %}
+                    <tr>
+                        <td>
+                            <a href="{% url 'pengaduan:pengaduan_detail' pk=p.pk %}" class="text-decoration-none">{{ p.judul }}</a>
+                        </td>
+                        <td>{{ p.kategori.nama }}</td>
+                        <td>
+                            <span class="badge bg-{% if p.status == 'selesai' %}success{% elif p.status == 'eskalasi' %}warning{% elif p.status == 'dalam_penanganan' %}info{% else %}secondary{% endif %}">
+                                {{ p.get_status_display }}
+                            </span>
+                        </td>
+                        <td>
+                            <span class="badge bg-{% if p.prioritas == 'tinggi' %}danger{% elif p.prioritas == 'sedang' %}warning{% else %}info{% endif %}">
+                                {{ p.get_prioritas_display }}
+                            </span>
+                        </td>
+                        <td>{{ p.tanggal_diajukan|date:"d M Y" }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        <a href="{% url 'pengaduan:pengaduan_list' %}" class="btn btn-outline-primary btn-sm">Lihat Semua</a>
+        {% else %}
+        <div class="empty-state">
+            <i class="bi bi-inbox"></i>
+            <p>Belum ada pengaduan yang diajukan.</p>
+            <a href="{% url 'pengaduan:pengaduan_buat' %}" class="btn btn-primary">Buat Pengaduan Pertama</a>
+        </div>
+        {% endif %}
+    </div>
+</div>
+
+<h5 class="mt-4"><i class="bi bi-box-arrow-in-right me-2"></i>Laporan Kehilangan Saya</h5>
+<div class="card">
+    <div class="card-body">
+        {% if my_laporan_kehilangan %}
+        <div class="table-responsive">
+            <table class="table table-hover align-middle">
+                <thead>
+                    <tr>
+                        <th>Nama Barang</th>
+                        <th>Status</th>
+                        <th>Tanggal Diajukan</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for l in my_laporan_kehilangan %}
+                    <tr>
+                        <td>{{ l.nama_barang }}</td>
+                        <td>
+                            <span class="badge bg-{% if l.status == 'selesai' %}success{% elif l.status == 'ditemukan' %}info{% else %}secondary{% endif %}">
+                                {{ l.get_status_display }}
+                            </span>
+                        </td>
+                        <td>{{ l.tanggal_diajukan|date:"d M Y" }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% else %}
+        <div class="empty-state">
+            <i class="bi bi-search"></i>
+            <p>Belum ada laporan kehilangan.</p>
+        </div>
+        {% endif %}
+    </div>
+</div>
+
+{% elif section == 'petugas_pengaduan' %}
+<div class="row g-3 mb-4">
+    <div class="col-md-4">
+        <div class="card bg-primary text-white">
+            <div class="card-body">
+                <h5 class="card-title"><i class="bi bi-inbox me-2"></i>Ditangani</h5>
+                <h3 class="mb-0">{{ total_ditangani }}</h3>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card bg-success text-white">
+            <div class="card-body">
+                <h5 class="card-title"><i class="bi bi-check-circle me-2"></i>Selesai Bulan Ini</h5>
+                <h3 class="mb-0">{{ total_selesai_bulan_ini }}</h3>
+            </div>
+        </div>
+    </div>
+</div>
+
+<h5><i class="bi bi-check2-square me-2"></i>Pengaduan yang Perlu Ditangani</h5>
+<div class="card">
+    <div class="card-body">
+        {% if pengaduan_ditangani %}
+        <div class="table-responsive">
+            <table class="table table-hover align-middle">
+                <thead>
+                    <tr>
+                        <th>Judul</th>
+                        <th>Pelapor</th>
+                        <th>Kategori</th>
+                        <th>Status</th>
+                        <th>Prioritas</th>
+                        <th>Aksi</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for p in pengaduan_ditangani %}
+                    <tr>
+                        <td>{{ p.judul }}</td>
+                        <td>
+                            {% if p.is_anonim and not tampilkan_identitas %}Anonim{% else %}{{ p.pelapor.username }}{% endif %}
+                        </td>
+                        <td>{{ p.kategori.nama }}</td>
+                        <td>
+                            <span class="badge bg-{% if p.status == 'selesai' %}success{% elif p.status == 'eskalasi' %}warning{% elif p.status == 'dalam_penanganan' %}info{% else %}secondary{% endif %}">
+                                {{ p.get_status_display }}
+                            </span>
+                        </td>
+                        <td>
+                            <span class="badge bg-{% if p.prioritas == 'tinggi' %}danger{% elif p.prioritas == 'sedang' %}warning{% else %}info{% endif %}">
+                                {{ p.get_prioritas_display }}
+                            </span>
+                        </td>
+                        <td>
+                            <a href="{% url 'pengaduan:pengaduan_petugas_detail' pk=p.pk %}" class="btn btn-sm btn-outline-primary">Lihat</a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% else %}
+        <div class="empty-state">
+            <i class="bi bi-check-all"></i>
+            <p>Tidak ada pengaduan yang perlu ditangani saat ini.</p>
+        </div>
+        {% endif %}
+    </div>
+</div>
+
+{% elif section == 'petugas_barang' %}
+<div class="row g-3 mb-4">
+    <div class="col-md-4">
+        <div class="card bg-info text-white">
+            <div class="card-body">
+                <h5 class="card-title"><i class="bi bi-box-seam me-2"></i>Barang Temuan</h5>
+                <h3 class="mb-0">{{ total_barang_temuan }}</h3>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card bg-warning text-dark">
+            <div class="card-body">
+                <h5 class="card-title"><i class="bi bi-hand-index-thumb me-2"></i>Klaim Menunggu</h5>
+                <h3 class="mb-0">{{ total_klaim_menunggu }}</h3>
+            </div>
+        </div>
+    </div>
+</div>
+
+<h5><i class="bi bi-box-seam me-2"></i>Barang Temuan Aktif</h5>
+<div class="card">
+    <div class="card-body">
+        {% if barang_temuan_aktif %}
+        <div class="table-responsive">
+            <table class="table table-hover align-middle">
+                <thead>
+                    <tr>
+                        <th>Nama Barang</th>
+                        <th>Lokasi Ditemukan</th>
+                        <th>Tanggal Ditemukan</th>
+                        <th>Status</th>
+                        <th>Aksi</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for b in barang_temuan_aktif %}
+                    <tr>
+                        <td>{{ b.nama_barang }}</td>
+                        <td>{{ b.lokasi_ditemukan }}</td>
+                        <td>{{ b.tanggal_ditemukan|date:"d M Y" }}</td>
+                        <td>
+                            <span class="badge bg-{% if b.status == 'dipublikasikan' %}info{% elif b.status == 'diklaim_menunggu_verifikasi' %}warning{% else %}secondary{% endif %}">
+                                {{ b.get_status_display }}
+                            </span>
+                        </td>
+                        <td>
+                            <a href="{% url 'barang:barang_temuan_detail' pk=b.pk %}" class="btn btn-sm btn-outline-primary">Lihat</a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% else %}
+        <div class="empty-state">
+            <i class="bi bi-box"></i>
+            <p>Belum ada barang temuan tercatat.</p>
+        </div>
+        {% endif %}
+    </div>
+</div>
+
+<h5 class="mt-4"><i class="bi bi-hand-index-thumb me-2"></i>Klaim Menunggu Verifikasi</h5>
+<div class="card">
+    <div class="card-body">
+        {% if klaim_menunggu %}
+        <div class="table-responsive">
+            <table class="table table-hover align-middle">
+                <thead>
+                    <tr>
+                        <th>Barang</th>
+                        <th>Diaklim Oleh</th>
+                        <th>Tanggal Klaim</th>
+                        <th>Aksi</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for k in klaim_menunggu %}
+                    <tr>
+                        <td>{{ k.barang_temuan.nama_barang }}</td>
+                        <td>{{ k.pelapor.username }}</td>
+                        <td>{{ k.tanggal_klaim|date:"d M Y" }}</td>
+                        <td>
+                            <a href="{% url 'barang:barang_klaim_detail' pk=k.pk %}" class="btn btn-sm btn-outline-primary">Verifikasi</a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% else %}
+        <div class="empty-state">
+            <i class="bi bi-check-circle"></i>
+            <p>Tidak ada klaim yang menunggu verifikasi.</p>
+        </div>
+        {% endif %}
+    </div>
+</div>
+
+{% elif section == 'kepala_madrasah' %}
+<div class="row g-3 mb-4">
+    <div class="col-md-4">
+        <div class="card bg-warning text-dark">
+            <div class="card-body">
+                <h5 class="card-title"><i class="bi bi-exclamation-triangle me-2"></i>Eskalasi</h5>
+                <h3 class="mb-0">{{ total_eskalasi }}</h3>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card bg-info text-white">
+            <div class="card-body">
+                <h5 class="card-title"><i class="bi bi-chat-text me-2"></i>Pengaduan Bulan Ini</h5>
+                <h3 class="mb-0">{{ total_pengaduan_bulan_ini }}</h3>
+            </div>
+        </div>
+    </div>
+</div>
+
+<h5><i class="bi bi-exclamation-triangle me-2"></i>Pengaduan Eskalasi</h5>
+<div class="card">
+    <div class="card-body">
+        {% if pengaduan_eskalasi %}
+        <div class="table-responsive">
+            <table class="table table-hover align-middle">
+                <thead>
+                    <tr>
+                        <th>Judul</th>
+                        <th>Pelapor</th>
+                        <th>Kategori</th>
+                        <th>Tanggal Diajukan</th>
+                        <th>Aksi</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for p in pengaduan_eskalasi %}
+                    <tr>
+                        <td>{{ p.judul }}</td>
+                        <td>{{ p.pelapor.username }}</td>
+                        <td>{{ p.kategori.nama }}</td>
+                        <td>{{ p.tanggal_diajukan|date:"d M Y" }}</td>
+                        <td>
+                            <a href="{% url 'pengaduan:pengaduan_petugas_detail' pk=p.pk %}" class="btn btn-sm btn-outline-warning">Tindak Lanjut</a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% else %}
+        <div class="empty-state">
+            <i class="bi bi-shield-check"></i>
+            <p>Tidak ada kasus eskalasi saat ini.</p>
+        </div>
+        {% endif %}
+    </div>
+</div>
+
+{% elif section == 'admin' %}
+<div class="row g-3 mb-4">
+    <div class="col-md-3">
+        <div class="card bg-primary text-white">
+            <div class="card-body">
+                <h5 class="card-title"><i class="bi bi-people me-2"></i>Pengguna</h5>
+                <h3 class="mb-0">{{ total_users }}</h3>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card bg-info text-white">
+            <div class="card-body">
+                <h5 class="card-title"><i class="bi bi-chat-text me-2"></i>Pengaduan</h5>
+                <h3 class="mb-0">{{ total_pengaduan }}</h3>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card bg-success text-white">
+            <div class="card-body">
+                <h5 class="card-title"><i class="bi bi-box-seam me-2"></i>Barang Temuan</h5>
+                <h3 class="mb-0">{{ total_barang_temuan }}</h3>
+            </div>
+        </div>
+    </div>
+</div>
+
+<h5><i class="bi bi-people me-2"></i>Pengguna per Role</h5>
+<div class="card mb-4">
+    <div class="card-body">
+        {% if users_by_role %}
+        <div class="table-responsive">
+            <table class="table table-hover align-middle">
+                <thead>
+                    <tr><th>Role</th><th>Jumlah</th></tr>
+                </thead>
+                <tbody>
+                    {% for item in users_by_role %}
+                    <tr>
+                        <td>
+                            <span class="badge bg-secondary">{{ item.role }}</span>
+                        </td>
+                        <td><strong>{{ item.total }}</strong> pengguna</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% else %}
+        <div class="empty-state"><p>Belum ada data pengguna.</p></div>
+        {% endif %}
+    </div>
+</div>
+
+<h5><i class="bi bi-gear-wide-connected me-2"></i>Pusat Kontrol & Manajemen Sistem</h5>
+<div class="row g-3">
+    <div class="col-md-4">
+        <div class="card h-100 shadow-sm">
+            <div class="card-body">
+                <h5 class="card-title"><i class="bi bi-people text-primary me-2"></i>Akun & Hak Akses</h5>
+                <p class="card-text text-muted small">Kelola data pengguna, penetapan peran (role), aktivasi akun, dan verifikasi civitas.</p>
+                <a href="{% url 'accounts:user_list' %}" class="btn btn-outline-primary btn-sm">Buka Manajemen Pengguna</a>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card h-100 shadow-sm">
+            <div class="card-body">
+                <h5 class="card-title"><i class="bi bi-tags text-info me-2"></i>Kategori Pengaduan</h5>
+                <p class="card-text text-muted small">Atur kategori kritik/saran, batas waktu SLA, dan petugas penanggung jawab tiap unit.</p>
+                <a href="{% url 'admin:pengaduan_kategoripengaduan_changelist' %}" class="btn btn-outline-info btn-sm">Kelola Kategori</a>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card h-100 shadow-sm">
+            <div class="card-body">
+                <h5 class="card-title"><i class="bi bi-geo-alt text-success me-2"></i>Pos Penitipan Barang</h5>
+                <p class="card-text text-muted small">Atur titik fisik pos pengumpulan dan penyimpanan barang temuan di lingkungan madrasah.</p>
+                <a href="{% url 'admin:barang_lokasiposbarang_changelist' %}" class="btn btn-outline-success btn-sm">Kelola Pos Barang</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endif %}
+
+{% endblock %}
+

@@ -1,0 +1,67 @@
+{% extends 'base.html' %}
+{% block title %}{% if object %}Edit{% else %}Tambah{% endif %} Kategori - SILANG MAN 1 Jepara{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-md-7">
+            <div class="card shadow">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="mb-0">
+                        <i class="bi bi-{% if object %}pencil{% else %}plus-circle{% endif %} me-2"></i>
+                        {% if object %}Edit Kategori Pengaduan{% else %}Tambah Kategori Pengaduan Baru{% endif %}
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <form method="post" novalidate>
+                        {% csrf_token %}
+                        <div class="mb-3">
+                            <label class="form-label fw-semibold" for="id_nama">Nama Kategori <span class="text-danger">*</span></label>
+                            {{ form.nama }}
+                            {% if form.nama.errors %}
+                                <div class="text-danger small mt-1">{{ form.nama.errors }}</div>
+                            {% endif %}
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label fw-semibold" for="id_deskripsi">Deskripsi</label>
+                            {{ form.deskripsi }}
+                            {% if form.deskripsi.errors %}
+                                <div class="text-danger small mt-1">{{ form.deskripsi.errors }}</div>
+                            {% endif %}
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-8 mb-3">
+                                <label class="form-label fw-semibold" for="id_petugas_penanggung_jawab">Petugas Penanggung Jawab</label>
+                                {{ form.petugas_penanggung_jawab }}
+                                <div class="form-text small text-muted">Pengaduan pada kategori ini otomatis ditugaskan ke petugas ini.</div>
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <label class="form-label fw-semibold" for="id_sla_jam">SLA (Batas Jam)</label>
+                                {{ form.sla_jam }}
+                                <div class="form-text small text-muted">Target respon (jam).</div>
+                            </div>
+                        </div>
+
+                        <div class="mb-4">
+                            <div class="form-check pt-2">
+                                {{ form.is_active }}
+                                <label for="id_is_active" class="form-check-label fw-semibold">Kategori Aktif (Dapat dipilih pengguna)</label>
+                            </div>
+                        </div>
+
+                        <div class="d-flex justify-content-between mt-4">
+                            <a href="{% url 'pengaduan:kategori_list' %}" class="btn btn-outline-secondary">Batal</a>
+                            <button type="submit" class="btn btn-primary">
+                                <i class="bi bi-save me-1"></i> Simpan Kategori
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+

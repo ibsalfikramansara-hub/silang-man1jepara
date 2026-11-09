@@ -1,0 +1,53 @@
+﻿{% extends 'base.html' %}
+{% block title %}Laporan Kehilangan Saya - SILANG MAN 1 Jepara{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h2><i class="bi bi-search me-2"></i>Laporan Kehilangan Saya</h2>
+    <div class="card shadow">
+        <div class="card-body">
+            {% if laporan_list %}
+            <div class="table-responsive">
+                <table class="table table-hover align-middle">
+                    <thead>
+                        <tr>
+                            <th>Nama Barang</th>
+                            <th>Deskripsi</th>
+                            <th>Lokasi Terakhir Terlihat</th>
+                            <th>Tanggal</th>
+                            <th>Status</th>
+                            <th>Aksi</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for l in laporan_list %}
+                        <tr>
+                            <td>{{ l.nama_barang }}</td>
+                            <td>{{ l.deskripsi|truncatewords:10 }}</td>
+                            <td>{{ l.lokasi_terakhir_terlihat }}</td>
+                            <td>{{ l.tanggal_diajukan|date:"d M Y" }}</td>
+                            <td>
+                                <span class="badge bg-{% if l.status == 'selesai' %}success{% elif l.status == 'ditemukan' %}info{% else %}secondary{% endif %}">
+                                    {{ l.get_status_display }}
+                                </span>
+                            </td>
+                            <td>
+                                <a href="{% url 'barang:barang_laporan_kehilangan_detail' pk=l.pk %}" class="btn btn-sm btn-outline-primary">Lihat</a>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            {% else %}
+            <div class="empty-state">
+                <i class="bi bi-search"></i>
+                <p>Belum ada laporan kehilangan.</p>
+                <a href="{% url 'barang:laporan_kehilangan_buat' %}" class="btn btn-warning">Laporkan Barang Hilang</a>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}
+

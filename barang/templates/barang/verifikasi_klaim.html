@@ -1,0 +1,49 @@
+﻿{% extends 'base.html' %}
+{% block title %}Verifikasi Klaim Barang - SILANG MAN 1 Jepara{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card shadow">
+                <div class="card-header bg-warning text-dark">
+                    <h4 class="mb-0"><i class="bi bi-check-circle me-2"></i>Verifikasi Klaim Kepemilikan</h4>
+                </div>
+                <div class="card-body">
+                    <h5>{{ object.barang_temuan.nama_barang }}</h5>
+                    <p class="text-muted">
+                        Diaklim oleh: <strong>{{ object.pelapor.username }}</strong><br>
+                        Alasan klaim: {{ object.alasan_klaim|truncatewords:15 }}
+                    </p>
+
+                    <form method="post">
+                        {% csrf_token %}
+                        <div class="mb-3">
+                            <label for="id_status" class="form-label">Keputusan Verifikasi <span class="text-danger">*</span></label>
+                            {{ form.status }}
+                            {% if form.status.errors %}
+                                <div class="text-danger small">{{ form.status.errors }}</div>
+                            {% endif %}
+                        </div>
+                        <div class="mb-3">
+                            <label for="id_catatan_verifikasi" class="form-label">Catatan Verifikasi</label>
+                            {{ form.catatan_verifikasi }}
+                            {% if form.catatan_verifikasi.errors %}
+                                <div class="text-danger small">{{ form.catatan_verifikasi.errors }}</div>
+                            {% endif %}
+                            <small class="form-text text-muted">Catat hasil verifikasi kepemilikan barang.</small>
+                        </div>
+                        <div class="d-flex justify-content-between mt-4">
+                            <a href="{% url 'barang:barang_klaim_detail' pk=object.pk %}" class="btn btn-outline-secondary">Batal</a>
+                            <button type="submit" class="btn btn-primary">
+                                <i class="bi bi-check me-1"></i> Simpan Keputusan
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+

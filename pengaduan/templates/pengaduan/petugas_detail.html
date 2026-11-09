@@ -1,0 +1,119 @@
+﻿{% extends 'base.html' %}
+{% block title %}Detail Pengaduan (Petugas) - SILANG MAN 1 Jepara{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="d-flex justify-content-between align-items-start mb-4">
+        <div>
+            <h2>{{ pengaduan.judul }}</h2>
+            <p class="text-muted small">
+                Kategori: {{ pengaduan.kategori.nama }} | 
+                <span class="badge bg-{% if pengaduan.prioritas == 'tinggi' %}danger{% elif pengaduan.prioritas == 'sedang' %}warning{% else %}info{% endif %}">
+                    {{ pengaduan.get_prioritas_display }}
+                </span>
+            </p>
+        </div>
+        <div class="d-flex gap-2">
+            <a href="{% url 'pengaduan:pengaduan_petugas_list' %}" class="btn btn-sm btn-outline-secondary">Kembali ke Daftar</a>
+            {% if bisa_ditindaklanjuti and pengaduan.status != 'selesai' %}
+                <a href="{% url 'pengaduan:pengaduan_tindak_lanjuti' pk=pengaduan.pk %}" class="btn btn-sm btn-primary">Tindak Lanjuti</a>
+            {% endif %}
+            {% if bisa_ditindaklanjuti and pengaduan.status != 'selesai' and pengaduan.status != 'eskalasi' %}
+                <a href="{% url 'pengaduan:pengaduan_eskalasi' pk=pengaduan.pk %}" class="btn btn-sm btn-warning">Eskalasi ke Kepala</a>
+            {% endif %}
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-8">
+            <div class="card shadow mb-4">
+                <div class="card-header bg-light">
+                    <h5 class="mb-0"><i class="bi bi-chat-dots me-2"></i>Isi Pengaduan</h5>
+                </div>
+                <div class="card-body">
+                    <p>{{ pengaduan.isi_pengaduan|linebreaksbr }}</p>
+                </div>
+            </div>
+
+            <div class="card shadow mb-4">
+                <div class="card-header bg-light">
+                    <h5 class="mb-0"><i class="bi bi-person me-2"></i>Identitas Pelapor</h5>
+                </div>
+                <div class="card-body">
+                    {% if tampilkan_identitas %}
+                        <p><strong>Nama:</strong> {{ pengaduan.pelapor.get_full_name|default:pengaduan.pelapor.username }}</p>
+                        <p><strong>NIS/NISN/NIP:</strong> {{ pengaduan.pelapor.nip_nisn|default:"-" }}</p>
+                        <p><strong>Telepon:</strong> {{ pengaduan.pelapor.telepon|default:"-" }}</p>
+                    {% else %}
+                        <div class="text-muted fst-italic">
+                            <i class="bi bi-eye-slash me-1"></i> Identitas pelapor disembunyikan (anonim).
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card shadow">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="mb-0"><i class="bi bi-info-circle me-2"></i>Status & Aksi</h5>
+                </div>
+                <div class="card-body">
+                    <p><strong>Status Saat Ini:</strong></p>
+                    <span class="badge bg-{% if pengaduan.status == 'selesai' %}success{% elif pengaduan.status == 'eskalasi' %}warning{% elif pengaduan.status == 'dalam_penanganan' %}info{% else %}secondary{% endif %} fs-6">
+                        {{ pengaduan.get_status_display }}
+                    </span>
+                    <p class="mt-3"><strong>Petugas Penanganan:</strong> {{ pengaduan.petugas_penanganan.get_full_name|default:pengaduan.petugas_penanganan.username|default:"Belum ditetapkan" }}</p>
+                    {% if pengaduan.catatan_petugas %}
+                        <p><strong>Catatan:</strong> {{ pengaduan.catatan_petugas }}</p>
+                    {% endif %}
+                    <p class="mt-3"><strong>Tanggal Diajukan:</strong> {{ pengaduan.tanggal_diajukan|date:"d M Y H:i" }}</p>
+                    {% if pengaduan.tanggal_selesai %}
+                        <p><strong>Tanggal Selesai:</strong> {{ pengaduan.tanggal_selesai|date:"d M Y H:i" }}</p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="card shadow mt-4">
+        <div class="card-header bg-light">
+            <h5 class="mb-0"><i class="bi bi-clock-history me-2"></i>Riwayat Tindak Lanjut</h5>
+        </div>
+        <div class="card-body">
+            {% if logs %}
+            <div class="table-responsive">
+                <table class="table table-hover align-middle table-sm">
+                    <thead>
+                        <tr>
+                            <th>Tanggal</th>
+                            <th>Oleh</th>
+                            <th>Status Lama → Baru</th>
+                            <th>Catatan</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for log in logs %}
+                        <tr>
+                            <td>{{ log.tanggal|date:"d M Y H:i" }}</td>
+                            <td>{{ log.user.username|default:"Sistem" }}</td>
+                            <td>
+                                {% if log.status_lama %}{{ log.get_status_lama_display }}{% else %}-{% endif %} → 
+                                <span class="badge bg-{% if log.status_baru == 'selesai' %}success{% elif log.status_baru == 'eskalasi' %}warning{% else %}info{% endif %}">
+                                    {{ log.get_status_baru_display }}
+                                </span>
+                            </td>
+                            <td>{{ log.catatan|default:"-" }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            {% else %}
+            <p class="text-muted small">Belum ada riwayat tindak lanjut.</p>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}
+

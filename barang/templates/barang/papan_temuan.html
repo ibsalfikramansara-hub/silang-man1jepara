@@ -1,0 +1,90 @@
+{% extends 'base.html' %}
+{% block title %}Papan Barang Temuan - SILANG MAN 1 Jepara{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h2><i class="bi bi-box-seam me-2"></i>Papan Barang Temuan</h2>
+    <p class="text-muted">
+        Daftar barang yang ditemukan dan diserahkan kepada petugas. 
+        Jika Anda kehilangan barang yang cocok, silakan ajukan klaim.
+    </p>
+
+    <!-- Search & Filter -->
+    <div class="card mb-4">
+        <div class="card-body">
+            <form method="get" class="row g-3">
+                <div class="col-md-4">
+                    <label class="form-label">Cari Nama Barang</label>
+                    <input type="text" name="q" class="form-control" value="{{ query }}" placeholder="Misal: buku, tas, dompet">
+                </div>
+                <div class="col-md-3">
+                    <label class="form-label">Lokasi Ditemukan</label>
+                    <input type="text" name="lokasi" class="form-control" value="{{ lokasi }}" placeholder="Misal: kantin, perpustakaan">
+                </div>
+                <div class="col-md-2 d-flex align-items-end">
+                    <button type="submit" class="btn btn-primary w-100">Cari</button>
+                </div>
+                <div class="col-md-3 d-flex align-items-end">
+                    <a href="{% url 'barang:papan_barang_temuan' %}" class="btn btn-outline-secondary w-100">Reset</a>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div class="row row-cols-1 row-cols-sm-2 row-cols-lg-3 g-4">
+        {% for b in barang_list %}
+        <div class="col">
+            <div class="card h-100 shadow-sm">
+                {% if b.foto %}
+                <img src="{{ b.foto.url }}" class="card-img-top" alt="{{ b.nama_barang }}" style="height: 200px; object-fit: cover;">
+                {% else %}
+                <div class="card-img-top bg-light d-flex align-items-center justify-content-center" style="height: 200px;">
+                    <i class="bi bi-box text-muted fs-1"></i>
+                </div>
+                {% endif %}
+                <div class="card-body">
+                    <h5 class="card-title">{{ b.nama_barang }}</h5>
+                    <p class="card-text text-muted small">{{ b.lokasi_ditemukan }}</p>
+                    <p class="card-text">{{ b.deskripsi|truncatewords:20 }}</p>
+                    <span class="badge bg-{% if b.status == 'dipublikasikan' %}info{% elif b.status == 'diklaim_menunggu_verifikasi' %}warning{% else %}secondary{% endif %}">
+                        {{ b.get_status_display }}
+                    </span>
+                    <p class="small text-muted">{{ b.tanggal_ditemukan|date:"d M Y" }}</p>
+                </div>
+                <div class="card-footer bg-transparent border-top">
+                    {% if request.user.is_authenticated and b.status == 'dipublikasikan' %}
+                        <a href="{% url 'barang:klaim_barang' barang_id=b.pk %}" class="btn btn-sm btn-outline-primary w-100">
+                            <i class="bi bi-hand-index-thumb me-1"></i> Ajukan Klaim
+                        </a>
+                    {% else %}
+                        <button class="btn btn-sm btn-outline-secondary w-100" disabled>Tidak Bisa Diklaim</button>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        {% empty %}
+        <div class="col-12">
+            <div class="empty-state">
+                <i class="bi bi-box"></i>
+                <p>Belum ada barang temuan yang cocok dengan pencarian.</p>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+
+    {% if barang_list.has_other_pages %}
+    <nav aria-label="Page navigation" class="mt-4">
+        <ul class="pagination justify-content-center">
+            {% if barang_list.has_previous %}
+                <li class="page-item"><a class="page-link" href="?page={{ barang_list.previous_page_number }}{% if query %}&q={{ query }}{% endif %}{% if lokasi %}&lokasi={{ lokasi }}{% endif %}">Sebelumnya</a></li>
+            {% endif %}
+            <li class="page-item active"><span class="page-link">Halaman {{ barang_list.number }} dari {{ barang_list.paginator.num_pages }}</span></li>
+            {% if barang_list.has_next %}
+                <li class="page-item"><a class="page-link" href="?page={{ barang_list.next_page_number }}{% if query %}&q={{ query }}{% endif %}{% if lokasi %}&lokasi={{ lokasi }}{% endif %}">Selanjutnya</a></li>
+            {% endif %}
+        </ul>
+    </nav>
+    {% endif %}
+</div>
+{% endblock %}
+

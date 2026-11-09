@@ -1,0 +1,46 @@
+﻿{% extends 'base.html' %}
+{% block title %}Eskalasi Kasus - SILANG MAN 1 Jepara{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h2><i class="bi bi-exclamation-triangle me-2"></i>Pengaduan Eskalasi</h2>
+    <div class="card shadow">
+        <div class="card-body">
+            {% if pengaduan_list %}
+            <div class="table-responsive">
+                <table class="table table-hover align-middle">
+                    <thead>
+                        <tr>
+                            <th>Judul</th>
+                            <th>Pelapor</th>
+                            <th>Kategori</th>
+                            <th>Tanggal Diajukan</th>
+                            <th>Aksi</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for p in pengaduan_list %}
+                        <tr>
+                            <td>{{ p.judul }}</td>
+                            <td>{{ p.pelapor.username }}</td>
+                            <td>{{ p.kategori.nama }}</td>
+                            <td>{{ p.tanggal_diajukan|date:"d M Y H:i" }}</td>
+                            <td>
+                                <a href="{% url 'pengaduan:pengaduan_petugas_detail' pk=p.pk %}" class="btn btn-sm btn-outline-warning">Tindak Lanjuti</a>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            {% else %}
+            <div class="empty-state">
+                <i class="bi bi-shield-check"></i>
+                <p>Tidak ada kasus eskalasi saat ini.</p>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}
+

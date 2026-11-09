@@ -1,0 +1,77 @@
+/* Custom CSS untuk Sistem Pengaduan Madrasah */
+:root {
+    --primary-color: #0d6efd;
+    --success-color: #198754;
+    --warning-color: #ffc107;
+    --danger-color: #dc3545;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+/* Navbar custom */
+.navbar-brand {
+    font-weight: 700;
+    font-size: 1.25rem;
+}
+
+/* Status badges */
+.badge-status {
+    font-size: 0.85rem;
+    padding: 0.5em 0.75em;
+    border-radius: 0.5rem;
+}
+
+/* Cards */
+.card {
+    border: none;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.08);
+    border-radius: 0.75rem;
+    transition: transform 0.2s;
+}
+
+.card:hover {
+    transform: translateY(-2px);
+}
+
+/* Form controls */
+.form-control, .form-select {
+    border-radius: 0.5rem;
+}
+
+/* Range input styling */
+.form-range::-webkit-slider-thumb {
+    background: var(--primary-color);
+}
+
+/* Table styling */
+.table th {
+    font-weight: 600;
+    color: #495057;
+}
+
+/* Role badge */
+.role-badge {
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+/* Empty state */
+.empty-state {
+    text-align: center;
+    padding: 3rem 1rem;
+    color: #6c757d;
+}
+.empty-state i {
+    font-size: 3rem;
+    margin-bottom: 1rem;
+    opacity: 0.5;
+}
+
+/* Action buttons */
+.btn-action {
+    font-size: 0.875rem;
+    padding: 0.375rem 0.75rem;
+}

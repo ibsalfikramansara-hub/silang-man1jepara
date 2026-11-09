@@ -1,0 +1,156 @@
+{% extends 'base.html' %}
+{% block title %}Tanda Terima Serah Terima Barang - SILANG MAN 1 Jepara{% endblock %}
+
+{% block extra_css %}
+<style>
+@media print {
+    nav, footer, .no-print, .btn {
+        display: none !important;
+    }
+    body {
+        background-color: #fff !important;
+        font-size: 11pt;
+        color: #000;
+    }
+    .container {
+        max-width: 100% !important;
+        padding: 0 !important;
+    }
+    .card {
+        border: none !important;
+        box-shadow: none !important;
+    }
+}
+.letterhead-border {
+    border-bottom: 3px double #000;
+}
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container my-3">
+    <!-- Bar Aksi Tombol Cetak (No Print) -->
+    <div class="d-flex justify-content-between align-items-center mb-4 no-print">
+        <a href="{% url 'barang:barang_klaim_detail' pk=klaim.pk %}" class="btn btn-outline-secondary">
+            <i class="bi bi-arrow-left me-1"></i> Kembali ke Detail Klaim
+        </a>
+        <button onclick="window.print()" class="btn btn-success">
+            <i class="bi bi-printer me-1"></i> Cetak Tanda Terima / Bukti Fisik
+        </button>
+    </div>
+
+    <!-- Lembar Dokumen Resmi Berita Acara -->
+    <div class="card p-4 p-md-5 bg-white shadow-sm border">
+        <!-- Kop Surat -->
+        <div class="text-center pb-3 mb-4 letterhead-border">
+            <h5 class="mb-0 fw-bold">KEMENTERIAN AGAMA REPUBLIK INDONESIA</h5>
+            <h4 class="mb-0 fw-bold">MADRASAH ALIYAH NEGERI 1 JEPARA</h4>
+            <p class="mb-0 small text-muted">Jl. Bawu - Batealit Km. 07 Bawu Batealit Jepara, Jawa Tengah | Telp. (0291) 592xxx</p>
+            <p class="mb-0 small text-muted">Laman: man1jepara.sch.id | Sistem Informasi Laporan Barang Hilang (SILANG)</p>
+        </div>
+
+        <div class="text-center mb-4">
+            <h5 class="fw-bold text-decoration-underline mb-1">BERITA ACARA & TANDA TERIMA SERAH TERIMA BARANG</h5>
+            <small class="text-muted">Nomor Registrasi: BA-SILANG/{{ tgl_cetak|date:"Y" }}/{{ klaim.pk|stringformat:"04d" }}</small>
+        </div>
+
+        <p class="mb-3">Pada hari ini <strong>{{ tgl_cetak|date:"l, d F Y" }}</strong>, bertempat di Lingkungan Madrasah Aliyah Negeri 1 Jepara, telah dilaksanakan serah terima barang temuan kepada pemilik yang berhak dengan rincian sebagai berikut:</p>
+
+        <!-- I. Rincian Barang Temuan -->
+        <h6 class="fw-bold bg-light p-2 border-start border-3 border-primary mb-2">I. DATA BARANG TEMUAN</h6>
+        <table class="table table-sm table-borderless mb-4">
+            <tr>
+                <th width="30%">Nama Barang</th>
+                <td>: <strong>{{ klaim.barang_temuan.nama_barang }}</strong></td>
+            </tr>
+            <tr>
+                <th>Lokasi Ditemukan</th>
+                <td>: {{ klaim.barang_temuan.lokasi_ditemukan }}</td>
+            </tr>
+            <tr>
+                <th>Tanggal Ditemukan</th>
+                <td>: {{ klaim.barang_temuan.tanggal_ditemukan|date:"d F Y" }}</td>
+            </tr>
+            <tr>
+                <th>Titik Penitipan / Pos</th>
+                <td>: {{ klaim.barang_temuan.lokasi_pos.nama|default:"Pos Satpam" }}</td>
+            </tr>
+            <tr>
+                <th>Deskripsi Fisik</th>
+                <td>: {{ klaim.barang_temuan.deskripsi }}</td>
+            </tr>
+        </table>
+
+        <!-- II. Identitas Pemilik Sah (Penerima) -->
+        <h6 class="fw-bold bg-light p-2 border-start border-3 border-success mb-2">II. IDENTITAS PENERIMA (PEMILIK SAH)</h6>
+        <table class="table table-sm table-borderless mb-4">
+            <tr>
+                <th width="30%">Nama Penerima</th>
+                <td>: <strong>{{ klaim.pelapor.get_full_name|default:klaim.pelapor.username }}</strong></td>
+            </tr>
+            <tr>
+                <th>NISN / NIP / Identitas</th>
+                <td>: {{ klaim.pelapor.nip_nisn|default:"-" }}</td>
+            </tr>
+            <tr>
+                <th>Kelas / Instansi / Unit</th>
+                <td>: {{ klaim.pelapor.instansi_unit|default:"Civitas MAN 1 Jepara" }}</td>
+            </tr>
+            <tr>
+                <th>Nomor Telepon / Kontak</th>
+                <td>: {{ klaim.pelapor.telepon|default:"-" }}</td>
+            </tr>
+            <tr>
+                <th>Bukti Kepemilikan Khusus</th>
+                <td>: {{ klaim.detail_verifikasi }}</td>
+            </tr>
+        </table>
+
+        <!-- III. Proses Serah Terima -->
+        <h6 class="fw-bold bg-light p-2 border-start border-3 border-warning mb-2">III. KETERANGAN PENYERAHAN</h6>
+        <table class="table table-sm table-borderless mb-4">
+            <tr>
+                <th width="30%">Status Verifikasi</th>
+                <td>: <span class="badge bg-success">TERVERIFIKASI SAH</span></td>
+            </tr>
+            <tr>
+                <th>Petugas yang Menyerahkan</th>
+                <td>: {% if serah_terima and serah_terima.petugas %}{{ serah_terima.petugas.get_full_name|default:serah_terima.petugas.username }}{% else %}{{ request.user.get_full_name|default:request.user.username }}{% endif %}</td>
+            </tr>
+            <tr>
+                <th>Tanggal Penyerahan Fisik</th>
+                <td>: {% if serah_terima %}{{ serah_terima.tanggal_serah_terima|date:"d F Y H:i" }}{% else %}{{ tgl_cetak|date:"d F Y H:i" }}{% endif %} WIB</td>
+            </tr>
+            <tr>
+                <th>Catatan Kondisi Barang</th>
+                <td>: {% if serah_terima and serah_terima.catatan %}{{ serah_terima.catatan }}{% else %}Barang diserahkan dalam keadaan lengkap dan baik sesuai verifikasi.{% endif %}</td>
+            </tr>
+        </table>
+
+        <p class="small text-muted mb-5">Demikian berita acara serah terima barang ini dibuat dengan sebenar-benarnya untuk dapat dipergunakan sebagaimana mestinya.</p>
+
+        <!-- Kotak Tanda Tangan -->
+        <div class="row text-center mt-3">
+            <div class="col-4">
+                <p class="mb-5">Pihak Pertama,<br><strong>Petugas Penyerah</strong></p>
+                <br>
+                <p class="mb-0 text-decoration-underline fw-bold">{% if serah_terima and serah_terima.petugas %}{{ serah_terima.petugas.get_full_name|default:serah_terima.petugas.username }}{% else %}{{ request.user.get_full_name|default:request.user.username }}{% endif %}</p>
+                <small>Petugas Keamanan / TU</small>
+            </div>
+            <div class="col-4">
+                <p class="mb-5">Mengetahui,<br><strong>Koordinator Sarpras</strong></p>
+                <br>
+                <p class="mb-0 text-decoration-underline fw-bold">Drs. H. Mansur</p>
+                <small>MAN 1 Jepara</small>
+            </div>
+            <div class="col-4">
+                <p class="mb-5">Pihak Kedua,<br><strong>Penerima (Pemilik Sah)</strong></p>
+                <br>
+                <p class="mb-0 text-decoration-underline fw-bold">{% if serah_terima and serah_terima.tanda_tangan_digital %}{{ serah_terima.tanda_tangan_digital }}{% else %}{{ klaim.pelapor.get_full_name|default:klaim.pelapor.username }}{% endif %}</p>
+                <small>Pemilik Sah Barang</small>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+

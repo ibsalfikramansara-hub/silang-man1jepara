@@ -1,0 +1,69 @@
+﻿{% extends 'base.html' %}
+{% block title %}{{ action|default:'Buat Pengaduan' }} - SILANG MAN 1 Jepara{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card shadow">
+                <div class="card-header bg-primary text-white">
+                    <h4 class="mb-0">
+                        <i class="bi bi-chat-text me-2"></i>{{ action|default:'Buat Pengaduan' }}
+                    </h4>
+                </div>
+                <div class="card-body">
+                    <form method="post" novalidate>
+                        {% csrf_token %}
+                        <div class="row">
+                            <div class="col-md-8 mb-3">
+                                <label for="id_judul" class="form-label">Judul Pengaduan <span class="text-danger">*</span></label>
+                                {{ form.judul }}
+                                {% if form.judul.errors %}
+                                    <div class="text-danger small">{{ form.judul.errors }}</div>
+                                {% endif %}
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <label for="id_prioritas" class="form-label">Prioritas</label>
+                                {{ form.prioritas }}
+                                {% if form.prioritas.errors %}
+                                    <div class="text-danger small">{{ form.prioritas.errors }}</div>
+                                {% endif %}
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label for="id_kategori" class="form-label">Kategori <span class="text-danger">*</span></label>
+                            {{ form.kategori }}
+                            {% if form.kategori.errors %}
+                                <div class="text-danger small">{{ form.kategori.errors }}</div>
+                            {% endif %}
+                            <small class="form-text text-muted">Pilih kategori yang paling sesuai agar pengaduan diteruskan ke petugas yang bertanggung jawab.</small>
+                        </div>
+                        <div class="mb-3 form-check">
+                            {{ form.is_anonim }}
+                            <label for="id_is_anonim" class="form-check-label">Ajukan sebagai Anonim</label>
+                            <p class="form-text text-muted small">
+                                Identitas Anda tetap tersimpan di sistem untuk audit, namun disembunyikan dari tampilan petugas. 
+                                Pilih ini untuk pengaduan sensitif.
+                            </p>
+                        </div>
+                        <div class="mb-3">
+                            <label for="id_isi_pengaduan" class="form-label">Isi Pengaduan <span class="text-danger">*</span></label>
+                            {{ form.isi_pengaduan }}
+                            {% if form.isi_pengaduan.errors %}
+                                <div class="text-danger small">{{ form.isi_pengaduan.errors }}</div>
+                                {% endif %}
+                        </div>
+                        <div class="d-flex justify-content-between mt-4">
+                            <a href="{% if object %}{% url 'pengaduan:pengaduan_detail' pk=object.pk %}{% else %}{% url 'pengaduan:pengaduan_list' %}{% endif %}" class="btn btn-outline-secondary">Batal</a>
+                            <button type="submit" class="btn btn-primary">
+                                <i class="bi bi-send me-1"></i> {% if object %}Perbarui{% else %}Ajukan Pengaduan{% endif %}
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+

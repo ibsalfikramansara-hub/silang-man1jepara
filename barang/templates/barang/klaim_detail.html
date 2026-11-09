@@ -1,0 +1,95 @@
+{% extends 'base.html' %}
+{% block title %}Detail Klaim Barang - SILANG MAN 1 Jepara{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="d-flex justify-content-between align-items-start mb-4">
+        <div>
+            <h2>Klaim: {{ klaim.barang_temuan.nama_barang }}</h2>
+            <p class="text-muted small">
+                Diaklim oleh: {{ klaim.pelapor.username }} | 
+                Status: 
+                <span class="badge bg-{% if klaim.status == 'terverifikasi' %}success{% elif klaim.status == 'ditolak' %}danger{% else %}warning{% endif %}">
+                    {{ klaim.get_status_display }}
+                </span>
+            </p>
+        </div>
+        <div class="d-flex gap-2">
+            <a href="{% url 'barang:barang_klaim_list' %}" class="btn btn-sm btn-outline-secondary">Kembali</a>
+            {% if klaim.status == 'menunggu' and request.user.is_petugas_barang %}
+                <a href="{% url 'barang:klaim_verifikasi' pk=klaim.pk %}" class="btn btn-sm btn-warning">Verifikasi Klaim</a>
+            {% endif %}
+            {% if klaim.status == 'terverifikasi' and request.user.is_petugas_barang and not serah_terima %}
+                <a href="{% url 'barang:serah_terima_barang' klaim_id=klaim.pk %}" class="btn btn-sm btn-success">Serah Terima Barang</a>
+            {% endif %}
+            {% if serah_terima %}
+                <a href="{% url 'barang:klaim_cetak_tanda_terima' pk=klaim.pk %}" class="btn btn-sm btn-outline-success">
+                    <i class="bi bi-printer me-1"></i> Cetak Tanda Terima
+                </a>
+            {% endif %}
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-8">
+            <div class="card shadow mb-4">
+                <div class="card-header bg-light">
+                    <h5 class="mb-0"><i class="bi bi-chat-text me-2"></i>Alasan Klaim</h5>
+                </div>
+                <div class="card-body">
+                    <p>{{ klaim.alasan_klaim|linebreaksbr }}</p>
+                </div>
+            </div>
+
+            <div class="card shadow mb-4">
+                <div class="card-header bg-light">
+                    <h5 class="mb-0"><i class="bi bi-search me-2"></i>Detail Verifikasi Kepemilikan</h5>
+                </div>
+                <div class="card-body">
+                    <p>{{ klaim.detail_verifikasi|linebreaksbr }}</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card shadow">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="mb-0"><i class="bi bi-info-circle me-2"></i>Informasi Klaim</h5>
+                </div>
+                <div class="card-body">
+                    <p><strong>Barang:</strong> {{ klaim.barang_temuan.nama_barang }}</td>
+                    <p><strong>Status Klaim:</strong></p>
+                    <span class="badge bg-{% if klaim.status == 'terverifikasi' %}success{% elif klaim.status == 'ditolak' %}danger{% else %}warning{% endif %} fs-6">
+                        {{ klaim.get_status_display }}
+                    </span>
+                    <p class="mt-3"><strong>Tanggal Klaim:</strong> {{ klaim.tanggal_klaim|date:"d M Y H:i" }}</p>
+                    {% if klaim.tanggal_verifikasi %}
+                        <p><strong>Tanggal Verifikasi:</strong> {{ klaim.tanggal_verifikasi|date:"d M Y H:i" }}</p>
+                        <p><strong>Verifikasi Oleh:</strong> {{ klaim.petugas_verifikasi.get_full_name|default:klaim.petugas_verifikasi.username|default:"-" }}</p>
+                    {% endif %}
+                    {% if klaim.catatan_verifikasi %}
+                        <p><strong>Catatan Verifikasi:</strong> {{ klaim.catatan_verifikasi }}</p>
+                    {% endif %}
+                </div>
+            </div>
+
+            {% if serah_terima %}
+            <div class="card shadow mt-3 border-success">
+                <div class="card-header bg-success text-white">
+                    <h5 class="mb-0"><i class="bi bi-handshake me-2"></i>Serah Terima Barang</h5>
+                </div>
+                <div class="card-body">
+                    <p><strong>Tanggal Serah Terima:</strong> {{ serah_terima.tanggal_serah_terima|date:"d M Y H:i" }}</p>
+                    <p><strong>Petugas:</strong> {{ serah_terima.petugas.get_full_name|default:serah_terima.petugas.username|default:"-" }}</p>
+                    <p><strong>Tanda Tangan Digital:</strong> {{ serah_terima.tanda_tangan_digital|default:"-" }}</p>
+                    {% if serah_terima.foto_bukti %}
+                        <img src="{{ serah_terima.foto_bukti.url }}" alt="Bukti Serah Terima" class="img-fluid rounded border mt-2" style="max-height: 300px; object-fit: contain;">
+                    {% endif %}
+                </div>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}
+

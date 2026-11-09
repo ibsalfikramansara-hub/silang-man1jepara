@@ -1,0 +1,354 @@
+[
+{
+  "model": "accounts.user",
+  "fields": {
+    "password": "pbkdf2_sha256$600000$0IvLn3mpfnduw2dw7Fz3zs$hDmibBLcvJu/6dwKqAHIbAodgeZK+TCn5BsuA+hoWz8=",
+    "last_login": "2026-11-09T12:01:07.783Z",
+    "is_superuser": true,
+    "username": "admin",
+    "first_name": "Administrator",
+    "last_name": "TU",
+    "email": "admin@madrasah.sch.id",
+    "is_staff": true,
+    "is_active": true,
+    "date_joined": "2026-11-09T09:13:57.484Z",
+    "role": "admin",
+    "nip_nisn": "NIP. 198001012005011001",
+    "telepon": "0811000001",
+    "instansi_unit": "Tata Usaha",
+    "is_verified": true,
+    "created_at": "2026-11-09T09:13:57.676Z",
+    "updated_at": "2026-11-09T12:00:15.362Z",
+    "groups": [],
+    "user_permissions": []
+  }
+},
+{
+  "model": "accounts.user",
+  "fields": {
+    "password": "pbkdf2_sha256$600000$DUdveFqeWe9aM0aNOMAy75$A2L1n2vk6rnTbQAMBieglOeb4B8ujMMCgU9Zi/gKYsk=",
+    "last_login": "2026-11-09T11:53:49.823Z",
+    "is_superuser": false,
+    "username": "petugas_bk",
+    "first_name": "Ustadzah",
+    "last_name": "Fatimah, S.Pd.",
+    "email": "bk@madrasah.sch.id",
+    "is_staff": false,
+    "is_active": true,
+    "date_joined": "2026-11-09T11:53:06.542Z",
+    "role": "petugas_pengaduan",
+    "nip_nisn": "NIP. 198703152010012003",
+    "telepon": "0811000002",
+    "instansi_unit": "Bimbingan Konseling",
+    "is_verified": true,
+    "created_at": "2026-11-09T11:53:06.739Z",
+    "updated_at": "2026-11-09T11:53:06.739Z",
+    "groups": [],
+    "user_permissions": []
+  }
+},
+{
+  "model": "accounts.user",
+  "fields": {
+    "password": "pbkdf2_sha256$600000$eQechIZ0wUqau3P58xJVYn$cduYQiyPD2lh/7jvWFqXZBEtoChKTFXFjhtTX/35oFY=",
+    "last_login": "2026-11-09T11:53:49.849Z",
+    "is_superuser": false,
+    "username": "petugas_satpam",
+    "first_name": "Pak",
+    "last_name": "Sutrisno",
+    "email": "satpam@madrasah.sch.id",
+    "is_staff": false,
+    "is_active": true,
+    "date_joined": "2026-11-09T11:53:06.744Z",
+    "role": "petugas_barang",
+    "nip_nisn": "ID. SAT-001",
+    "telepon": "0811000003",
+    "instansi_unit": "Keamanan / Pos Utama",
+    "is_verified": true,
+    "created_at": "2026-11-09T11:53:06.955Z",
+    "updated_at": "2026-11-09T11:53:06.955Z",
+    "groups": [],
+    "user_permissions": []
+  }
+},
+{
+  "model": "accounts.user",
+  "fields": {
+    "password": "pbkdf2_sha256$600000$wg90TBgjanHgR4q9exqWkG$pyIfVkC5OPgvZNCe63OU2s78ibLTrD51KG9tLJC3Z3o=",
+    "last_login": null,
+    "is_superuser": false,
+    "username": "kepala_madrasah",
+    "first_name": "Dr. H.",
+    "last_name": "Muzammil, M.Ag.",
+    "email": "kamad@madrasah.sch.id",
+    "is_staff": false,
+    "is_active": true,
+    "date_joined": "2026-11-09T11:53:06.959Z",
+    "role": "kepala_madrasah",
+    "nip_nisn": "NIP. 197205101998031002",
+    "telepon": "0811000004",
+    "instansi_unit": "Pimpinan Madrasah",
+    "is_verified": true,
+    "created_at": "2026-11-09T11:53:07.156Z",
+    "updated_at": "2026-11-09T11:53:07.156Z",
+    "groups": [],
+    "user_permissions": []
+  }
+},
+{
+  "model": "accounts.user",
+  "fields": {
+    "password": "pbkdf2_sha256$600000$Foh27gXXq4dmeKiAEJkV9h$Bb3vp8NAz+SadLbR/U+RMz4g4/dyktOdfoD5QuBoyvk=",
+    "last_login": "2026-11-09T12:17:20.583Z",
+    "is_superuser": false,
+    "username": "siswa_ali",
+    "first_name": "Muhammad",
+    "last_name": "Ali Fikri",
+    "email": "ali@madrasah.sch.id",
+    "is_staff": false,
+    "is_active": true,
+    "date_joined": "2026-11-09T11:53:07.160Z",
+    "role": "pelapor",
+    "nip_nisn": "NISN. 0081234567",
+    "telepon": "0811000005",
+    "instansi_unit": "Kelas XII MIA 1",
+    "is_verified": true,
+    "created_at": "2026-11-09T11:53:07.376Z",
+    "updated_at": "2026-11-09T11:53:07.376Z",
+    "groups": [],
+    "user_permissions": []
+  }
+},
+{
+  "model": "pengaduan.kategoripengaduan",
+  "pk": 1,
+  "fields": {
+    "nama": "Fasilitas",
+    "deskripsi": "Sarana prasarana",
+    "petugas_penanggung_jawab": null,
+    "sla_jam": 24,
+    "is_active": true,
+    "created_at": "2026-11-09T11:43:18.883Z"
+  }
+},
+{
+  "model": "pengaduan.kategoripengaduan",
+  "pk": 2,
+  "fields": {
+    "nama": "Fasilitas & Sarpras",
+    "deskripsi": "Kerusakan atau pemeliharaan gedung, AC, proyektor, dan sarana belajar",
+    "petugas_penanggung_jawab": [
+      "petugas_bk"
+    ],
+    "sla_jam": 24,
+    "is_active": true,
+    "created_at": "2026-11-09T11:53:07.381Z"
+  }
+},
+{
+  "model": "pengaduan.kategoripengaduan",
+  "pk": 3,
+  "fields": {
+    "nama": "Bimbingan Konseling & Kedisiplinan",
+    "deskripsi": "Konsultasi masalah siswa, perundungan (bullying), kedisiplinan dan tata tertib",
+    "petugas_penanggung_jawab": [
+      "petugas_bk"
+    ],
+    "sla_jam": 48,
+    "is_active": true,
+    "created_at": "2026-11-09T11:53:07.385Z"
+  }
+},
+{
+  "model": "pengaduan.kategoripengaduan",
+  "pk": 4,
+  "fields": {
+    "nama": "Pelayanan Akademik & Pembelajaran",
+    "deskripsi": "Kritik dan saran terkait proses belajar mengajar dan ujian",
+    "petugas_penanggung_jawab": [
+      "petugas_bk"
+    ],
+    "sla_jam": 48,
+    "is_active": true,
+    "created_at": "2026-11-09T11:53:07.388Z"
+  }
+},
+{
+  "model": "pengaduan.kategoripengaduan",
+  "pk": 5,
+  "fields": {
+    "nama": "Kebersihan & Lingkungan Madrasah",
+    "deskripsi": "Laporan kebersihan toilet, kantin, tempat wudhu, dan halaman madrasah",
+    "petugas_penanggung_jawab": [
+      "petugas_bk"
+    ],
+    "sla_jam": 24,
+    "is_active": true,
+    "created_at": "2026-11-09T11:53:07.391Z"
+  }
+},
+{
+  "model": "pengaduan.pengaduan",
+  "pk": 2,
+  "fields": {
+    "judul": "Proyektor Kelas XII MIA 1 Mati Total",
+    "kategori": 1,
+    "pelapor": [
+      "siswa_ali"
+    ],
+    "is_anonim": false,
+    "isi_pengaduan": "Proyektor tidak menyala saat pelajaran fisika, lampu indikator merah berkedip.",
+    "prioritas": "tinggi",
+    "status": "diajukan",
+    "petugas_penanganan": null,
+    "catatan_petugas": "",
+    "tanggal_diajukan": "2026-11-09T11:53:29.710Z",
+    "tanggal_diproses": null,
+    "tanggal_selesai": null,
+    "rating_kepuasan": null,
+    "ulasan_kepuasan": "",
+    "updated_at": "2026-11-09T11:53:29.710Z"
+  }
+},
+{
+  "model": "pengaduan.pengaduan",
+  "pk": 3,
+  "fields": {
+    "judul": "Proyektor Kelas XII MIA 1 Mati Total",
+    "kategori": 1,
+    "pelapor": [
+      "siswa_ali"
+    ],
+    "is_anonim": false,
+    "isi_pengaduan": "Proyektor tidak menyala saat pelajaran fisika, lampu indikator merah berkedip.",
+    "prioritas": "tinggi",
+    "status": "dalam_penanganan",
+    "petugas_penanganan": [
+      "petugas_bk"
+    ],
+    "catatan_petugas": "Teknisi IT madrasah sudah dipanggil untuk cek kabel dan power unit.",
+    "tanggal_diajukan": "2026-11-09T11:53:49.812Z",
+    "tanggal_diproses": "2026-11-09T11:53:49.836Z",
+    "tanggal_selesai": null,
+    "rating_kepuasan": null,
+    "ulasan_kepuasan": "",
+    "updated_at": "2026-11-09T11:53:49.836Z"
+  }
+},
+{
+  "model": "pengaduan.logtindaklanjutpengaduan",
+  "pk": 1,
+  "fields": {
+    "pengaduan": 2,
+    "user": [
+      "siswa_ali"
+    ],
+    "status_lama": "",
+    "status_baru": "diajukan",
+    "catatan": "Pengaduan diajukan oleh pelapor.",
+    "tanggal": "2026-11-09T11:53:29.714Z"
+  }
+},
+{
+  "model": "pengaduan.logtindaklanjutpengaduan",
+  "pk": 2,
+  "fields": {
+    "pengaduan": 3,
+    "user": [
+      "siswa_ali"
+    ],
+    "status_lama": "",
+    "status_baru": "diajukan",
+    "catatan": "Pengaduan diajukan oleh pelapor.",
+    "tanggal": "2026-11-09T11:53:49.816Z"
+  }
+},
+{
+  "model": "pengaduan.logtindaklanjutpengaduan",
+  "pk": 3,
+  "fields": {
+    "pengaduan": 3,
+    "user": [
+      "petugas_bk"
+    ],
+    "status_lama": "diajukan",
+    "status_baru": "dalam_penanganan",
+    "catatan": "Teknisi IT madrasah sudah dipanggil untuk cek kabel dan power unit.",
+    "tanggal": "2026-11-09T11:53:49.839Z"
+  }
+},
+{
+  "model": "barang.lokasiposbarang",
+  "pk": 1,
+  "fields": {
+    "nama": "Pos Satpam Gerbang Utama",
+    "lokasi": "Gerbang Utama Madrasah",
+    "petugas_penanggung_jawab": [
+      "petugas_satpam"
+    ],
+    "is_active": true
+  }
+},
+{
+  "model": "barang.lokasiposbarang",
+  "pk": 2,
+  "fields": {
+    "nama": "Ruang Tata Usaha (TU)",
+    "lokasi": "Gedung A Lantai 1",
+    "petugas_penanggung_jawab": [
+      "petugas_satpam"
+    ],
+    "is_active": true
+  }
+},
+{
+  "model": "barang.lokasiposbarang",
+  "pk": 3,
+  "fields": {
+    "nama": "Perpustakaan Madrasah",
+    "lokasi": "Gedung B Lantai 2",
+    "petugas_penanggung_jawab": [
+      "petugas_satpam"
+    ],
+    "is_active": true
+  }
+},
+{
+  "model": "barang.barangtemuan",
+  "pk": 1,
+  "fields": {
+    "nama_barang": "Dompet Hitam",
+    "deskripsi": "Berisi kartu identitas",
+    "foto": "",
+    "lokasi_ditemukan": "Masjid",
+    "tanggal_ditemukan": "2026-11-09",
+    "status": "dipublikasikan",
+    "dipublikasikan": true,
+    "petugas_input": null,
+    "lokasi_pos": null,
+    "tanggal_dipublikasikan": null,
+    "tanggal_diserahkan": null,
+    "updated_at": "2026-11-09T11:42:29.951Z"
+  }
+},
+{
+  "model": "barang.barangtemuan",
+  "pk": 2,
+  "fields": {
+    "nama_barang": "Kalkulator Casio FX-991EX",
+    "deskripsi": "Warna hitam putih, tertinggal di lab komputer.",
+    "foto": "",
+    "lokasi_ditemukan": "Lab Komputer 1",
+    "tanggal_ditemukan": "2026-11-09",
+    "status": "dilaporkan",
+    "dipublikasikan": true,
+    "petugas_input": [
+      "petugas_satpam"
+    ],
+    "lokasi_pos": 1,
+    "tanggal_dipublikasikan": "2026-11-09T11:53:49.864Z",
+    "tanggal_diserahkan": null,
+    "updated_at": "2026-11-09T11:53:49.864Z"
+  }
+}
+]

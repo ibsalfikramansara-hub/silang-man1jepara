@@ -1,0 +1,60 @@
+﻿{% extends 'base.html' %}
+{% block title %}Laporan Saya - SILANG MAN 1 Jepara{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h2><i class="bi bi-list-ul me-2"></i>Riwayat Pengaduan Saya</h2>
+    <div class="card shadow mb-4">
+        <div class="card-body">
+            {% if pengaduan_list %}
+            <div class="table-responsive">
+                <table class="table table-hover align-middle">
+                    <thead>
+                        <tr>
+                            <th>Judul</th>
+                            <th>Kategori</th>
+                            <th>Status</th>
+                            <th>Prioritas</th>
+                            <th>Tanggal Diajukan</th>
+                            <th>Aksi</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for p in pengaduan_list %}
+                        <tr>
+                            <td>{{ p.judul }}</td>
+                            <td>{{ p.kategori.nama }}</td>
+                            <td>
+                                <span class="badge bg-{% if p.status == 'selesai' %}success{% elif p.status == 'eskalasi' %}warning{% elif p.status == 'dalam_penanganan' %}info{% else %}secondary{% endif %}">
+                                    {{ p.get_status_display }}
+                                </span>
+                            </td>
+                            <td>
+                                <span class="badge bg-{% if p.prioritas == 'tinggi' %}danger{% elif p.prioritas == 'sedang' %}warning{% else %}info{% endif %}">
+                                    {{ p.get_prioritas_display }}
+                                </span>
+                            </td>
+                            <td>{{ p.tanggal_diajukan|date:"d M Y H:i" }}</td>
+                            <td>
+                                <a href="{% url 'pengaduan:pengaduan_detail' pk=p.pk %}" class="btn btn-sm btn-outline-primary">Lihat</a>
+                                {% if p.status == 'selesai' and p.rating_kepuasan is None %}
+                                    <a href="{% url 'pengaduan:pengaduan_rating' pk=p.pk %}" class="btn btn-sm btn-outline-success">Beri Rating</a>
+                                {% endif %}
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            {% else %}
+            <div class="empty-state">
+                <i class="bi bi-inbox"></i>
+                <p>Belum ada pengaduan yang diajukan.</p>
+                <a href="{% url 'pengaduan:pengaduan_buat' %}" class="btn btn-primary">Buat Pengaduan Pertama</a>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}
+

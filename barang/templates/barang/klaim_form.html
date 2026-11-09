@@ -1,0 +1,59 @@
+﻿{% extends 'base.html' %}
+{% block title %}Ajukan Klaim Barang - SILANG MAN 1 Jepara{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card shadow">
+                <div class="card-header bg-warning text-dark">
+                    <h4 class="mb-0"><i class="bi bi-hand-index-thumb me-2"></i>Ajukan Klaim Kepemilikan</h4>
+                </div>
+                <div class="card-body">
+                    {% if barang_temuan %}
+                    <div class="alert alert-info mb-4">
+                        <h5>{{ barang_temuan.nama_barang }}</h5>
+                        <p class="mb-0">
+                            Ditemukan di: {{ barang_temuan.lokasi_ditemukan }}<br>
+                            Tanggal ditemukan: {{ barang_temuan.tanggal_ditemukan|date:"d M Y" }}<br>
+                            Deskripsi: {{ barang_temuan.deskripsi|truncatewords:15 }}
+                        </p>
+                    </div>
+                    {% endif %}
+                    <form method="post" novalidate>
+                        {% csrf_token %}
+                        {{ form.barang_temuan }}
+                        <div class="mb-3">
+                            <label for="id_alasan_klaim" class="form-label">Alasan Klaim <span class="text-danger">*</span></label>
+                            {{ form.alasan_klaim }}
+                            {% if form.alasan_klaim.errors %}
+                                <div class="text-danger small">{{ form.alasan_klaim.errors }}</div>
+                            {% endif %}
+                            <small class="form-text text-muted">Sebutkan alasan mengapa Anda berpendapat barang ini milik Anda.</small>
+                        </div>
+                        <div class="mb-3">
+                            <label for="id_detail_verifikasi" class="form-label">Detail Verifikasi Kepemilikan <span class="text-danger">*</span></label>
+                            {{ form.detail_verifikasi }}
+                            {% if form.detail_verifikasi.errors %}
+                                <div class="text-danger small">{{ form.detail_verifikasi.errors }}</div>
+                            {% endif %}
+                            <small class="form-text text-muted">
+                                Sebutkan ciri khusus barang yang hanya dikenal oleh pemilik asli 
+                                (misal: ada goresan di sudut, isi tas, tanda khusus, dll.) 
+                                untuk mencegah klaim palsu.
+                            </small>
+                        </div>
+                        <div class="d-flex justify-content-between mt-4">
+                            <a href="{% if barang_temuan %}{% url 'barang:barang_temuan_detail_public' pk=barang_temuan.pk %}{% else %}{% url 'barang:papan_barang_temuan' %}{% endif %}" class="btn btn-outline-secondary">Batal</a>
+                            <button type="submit" class="btn btn-warning">
+                                <i class="bi bi-hand-index-thumb me-1"></i> Ajukan Klaim
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+

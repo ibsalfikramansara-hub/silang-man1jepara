@@ -1,0 +1,58 @@
+﻿{% extends 'base.html' %}
+{% block title %}Serah Terima Barang - SILANG MAN 1 Jepara{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card shadow border-success">
+                <div class="card-header bg-success text-white">
+                    <h4 class="mb-0"><i class="bi bi-handshake me-2"></i>Serah Terima Barang ke Pemilik</h4>
+                </div>
+                <div class="card-body">
+                    <h5>{{ klaim.barang_temuan.nama_barang }}</h5>
+                    <p class="text-muted">
+                        Pemilik: <strong>{{ klaim.pelapor.username }}</strong><br>
+                        Status klaim: <span class="badge bg-success">Terverifikasi</span>
+                    </p>
+
+                    <form method="post" enctype="multipart/form-data" novalidate>
+                        {% csrf_token %}
+                        {{ form.klaim }}
+                        <div class="mb-3">
+                            <label for="id_foto_bukti" class="form-label">Foto Bukti Serah Terima <span class="text-danger">*</span></label>
+                            {{ form.foto_bukti }}
+                            {% if form.foto_bukti.errors %}
+                                <div class="text-danger small">{{ form.foto_bukti.errors }}</div>
+                            {% endif %}
+                            <small class="form-text text-muted">Foto bukti penyerahan barang ke pemilik sah.</small>
+                        </div>
+                        <div class="mb-3">
+                            <label for="id_tanda_tangan_digital" class="form-label">Tanda Tangan Digital Penerima <span class="text-danger">*</span></label>
+                            {{ form.tanda_tangan_digital }}
+                            {% if form.tanda_tangan_digital.errors %}
+                                <div class="text-danger small">{{ form.tanda_tangan_digital.errors }}</div>
+                            {% endif %}
+                            <small class="form-text text-muted">Nama atau tanda tangan digital penerima barang.</small>
+                        </div>
+                        <div class="mb-3">
+                            <label for="id_catatan" class="form-label">Catatan Tambahan</label>
+                            {{ form.catatan }}
+                            {% if form.catatan.errors %}
+                                <div class="text-danger small">{{ form.catatan.errors }}</div>
+                            {% endif %}
+                        </div>
+                        <div class="d-flex justify-content-between mt-4">
+                            <a href="{% url 'barang:barang_klaim_detail' pk=klaim.pk %}" class="btn btn-outline-secondary">Batal</a>
+                            <button type="submit" class="btn btn-success">
+                                <i class="bi bi-check me-1"></i> Catat Serah Terima
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+

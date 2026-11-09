@@ -1,0 +1,110 @@
+﻿{% extends 'base.html' %}
+{% block title %}{% if object %}Edit{% else %}Tambah{% endif %} Pengguna - SILANG MAN 1 Jepara{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card shadow">
+                <div class="card-header bg-primary text-white">
+                    <h4 class="mb-0">
+                        <i class="bi bi-{% if object %}pencil{% else %}person-plus{% endif %} me-2"></i>
+                        {% if object %}Edit Pengguna{% else %}Tambah Pengguna{% endif %}
+                    </h4>
+                </div>
+                <div class="card-body">
+                    <form method="post" novalidate>
+                        {% csrf_token %}
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="id_username" class="form-label">Username</label>
+                                {{ form.username }}
+                                {% if form.username.errors %}
+                                    <div class="text-danger small">{{ form.username.errors }}</div>
+                                {% endif %}
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="id_email" class="form-label">Email</label>
+                                {{ form.email }}
+                                {% if form.email.errors %}
+                                    <div class="text-danger small">{{ form.email.errors }}</div>
+                                {% endif %}
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="id_first_name" class="form-label">Nama Depan</label>
+                                {{ form.first_name }}
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="id_last_name" class="form-label">Nama Belakang</label>
+                                {{ form.last_name }}
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="id_role" class="form-label">Role</label>
+                                {{ form.role }}
+                                {% if form.role.errors %}
+                                    <div class="text-danger small">{{ form.role.errors }}</div>
+                                {% endif %}
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="id_nip_nisn" class="form-label">NIS / NISN / NIP</label>
+                                {{ form.nip_nisn }}
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="id_telepon" class="form-label">Telepon</label>
+                                {{ form.telepon }}
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="id_instansi_unit" class="form-label">Instansi / Unit</label>
+                                {{ form.instansi_unit }}
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-4 mb-3">
+                                <div class="form-check pt-2">
+                                    {{ form.is_verified }}
+                                    <label for="id_is_verified" class="form-check-label">Terverifikasi</label>
+                                </div>
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <div class="form-check pt-2">
+                                    {{ form.is_active }}
+                                    <label for="id_is_active" class="form-check-label">Akun Aktif</label>
+                                </div>
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <div class="form-check pt-2">
+                                    {{ form.is_staff }}
+                                    <label for="id_is_staff" class="form-check-label">Akses Staf / Admin</label>
+                                </div>
+                            </div>
+                        </div>
+                        {% if not object.pk %}
+                        <div class="mb-3">
+                            <label for="id_password" class="form-label">Password</label>
+                            {{ form.password }}
+                            <small class="form-text text-muted">Biarkan kosong jika tidak ingin mengubah password.</small>
+                            {% if form.password.errors %}
+                                <div class="text-danger small">{{ form.password.errors }}</div>
+                            {% endif %}
+                        </div>
+                        {% endif %}
+                        <div class="d-flex justify-content-between mt-4">
+                            <a href="{% url 'accounts:user_list' %}" class="btn btn-outline-secondary">Batal</a>
+                            <button type="submit" class="btn btn-primary">
+                                <i class="bi bi-save me-1"></i> Simpan
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+

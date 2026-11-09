@@ -1,0 +1,30 @@
+﻿{% extends 'base.html' %}
+{% block title %}Hapus Pengguna - SILANG MAN 1 Jepara{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card shadow border-danger">
+                <div class="card-header bg-danger text-white">
+                    <h4 class="mb-0"><i class="bi bi-trash me-2"></i>Konfirmasi Hapus Pengguna</h4>
+                </div>
+                <div class="card-body">
+                    <p>Apakah Anda yakin ingin menghapus pengguna <strong>{{ object.username }}</strong>?</p>
+                    <p class="text-muted small">Tindakan ini tidak dapat diurungkan.</p>
+                    <form method="post">
+                        {% csrf_token %}
+                        <div class="d-flex justify-content-between mt-4">
+                            <a href="{% url 'accounts:user_list' %}" class="btn btn-outline-secondary">Batal</a>
+                            <button type="submit" class="btn btn-danger">
+                                <i class="bi bi-trash me-1"></i> Hapus
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+

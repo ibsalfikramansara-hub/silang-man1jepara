@@ -1,0 +1,71 @@
+﻿{% extends 'base.html' %}
+{% block title %}Lapor Barang Hilang - SILANG MAN 1 Jepara{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card shadow">
+                <div class="card-header bg-warning text-dark">
+                    <h4 class="mb-0"><i class="bi bi-box-arrow-in-right me-2"></i>Lapor Barang Hilang</h4>
+                </div>
+                <div class="card-body">
+                    <div class="alert alert-warning">
+                        <i class="bi bi-exclamation-triangle me-1"></i>
+                        Laporan kehilangan <strong>wajib menggunakan identitas asli</strong> karena menyangkut proses verifikasi kepemilikan dan serah terima fisik barang. Tidak bisa diajukan secara anonim.
+                    </div>
+                    <form method="post" enctype="multipart/form-data" novalidate>
+                        {% csrf_token %}
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="id_nama_barang" class="form-label">Nama Barang <span class="text-danger">*</span></label>
+                                {{ form.nama_barang }}
+                                {% if form.nama_barang.errors %}
+                                    <div class="text-danger small">{{ form.nama_barang.errors }}</div>
+                                {% endif %}
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="id_tanggal_terakhir_terlihat" class="form-label">Tanggal Terakhir Terlihat <span class="text-danger">*</span></label>
+                                {{ form.tanggal_terakhir_terlihat }}
+                                {% if form.tanggal_terakhir_terlihat.errors %}
+                                    <div class="text-danger small">{{ form.tanggal_terakhir_terlihat.errors }}</div>
+                                {% endif %}
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label for="id_lokasi_terakhir_terlihat" class="form-label">Lokasi Terakhir Terlihat <span class="text-danger">*</span></label>
+                            {{ form.lokasi_terakhir_terlihat }}
+                            {% if form.lokasi_terakhir_terlihat.errors %}
+                                <div class="text-danger small">{{ form.lokasi_terakhir_terlihat.errors }}</div>
+                            {% endif %}
+                        </div>
+                        <div class="mb-3">
+                            <label for="id_deskripsi" class="form-label">Deskripsi Detail Barang <span class="text-danger">*</span></label>
+                            {{ form.deskripsi }}
+                            {% if form.deskripsi.errors %}
+                                <div class="text-danger small">{{ form.deskripsi.errors }}</div>
+                            {% endif %}
+                            <small class="form-text text-muted">Sebutkan ciri khusus, warna, merek, isi, dan karakteristik yang hanya Anda ketahui. Ini diperlukan untuk verifikasi kepemilikan nanti.</small>
+                        </div>
+                        <div class="mb-3">
+                            <label for="id_foto_referensi" class="form-label">Foto Referensi Barang (jika ada)</label>
+                            {{ form.foto_referensi }}
+                            {% if form.foto_referensi.errors %}
+                                <div class="text-danger small">{{ form.foto_referensi.errors }}</div>
+                            {% endif %}
+                            <small class="form-text text-muted">Foto dapat membantu petugas mencocokkan dengan barang temuan yang ada.</small>
+                        </div>
+                        <div class="d-flex justify-content-between mt-4">
+                            <a href="{% url 'accounts:dashboard' %}" class="btn btn-outline-secondary">Batal</a>
+                            <button type="submit" class="btn btn-warning">
+                                <i class="bi bi-send me-1"></i> Ajukan Laporan Kehilangan
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+

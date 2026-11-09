@@ -1,0 +1,139 @@
+{% extends 'base.html' %}
+{% block title %}Manajemen Pengguna - SILANG MAN 1 Jepara{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h2><i class="bi bi-people me-2"></i>Manajemen Pengguna</h2>
+            <p class="text-muted mb-0">Kelola akun, role pengguna, dan reset kredensial sistem.</p>
+        </div>
+        <a href="{% url 'accounts:user_tambah' %}" class="btn btn-primary">
+            <i class="bi bi-person-plus me-1"></i> Tambah Pengguna
+        </a>
+    </div>
+
+    <!-- Filter & Pencarian -->
+    <div class="card shadow-sm mb-4">
+        <div class="card-body">
+            <form method="get" class="row g-2 align-items-end">
+                <div class="col-md-5">
+                    <label class="form-label small fw-semibold">Pencarian Akun</label>
+                    <input type="text" name="q" class="form-control form-control-sm" value="{{ query }}" placeholder="Cari username, nama, email, NISN/NIP, unit...">
+                </div>
+                <div class="col-md-3">
+                    <label class="form-label small fw-semibold">Filter Peran (Role)</label>
+                    <select name="role" class="form-select form-select-sm">
+                        <option value="">Semua Peran</option>
+                        {% for r_code, r_name in roles %}
+                            <option value="{{ r_code }}" {% if selected_role == r_code %}selected{% endif %}>{{ r_name }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="col-md-2">
+                    <label class="form-label small fw-semibold">Status Akun</label>
+                    <select name="status" class="form-select form-select-sm">
+                        <option value="">Semua Status</option>
+                        <option value="active" {% if selected_status == 'active' %}selected{% endif %}>Aktif</option>
+                        <option value="inactive" {% if selected_status == 'inactive' %}selected{% endif %}>Nonaktif</option>
+                    </select>
+                </div>
+                <div class="col-md-2 d-flex gap-1">
+                    <button type="submit" class="btn btn-sm btn-primary flex-fill">
+                        <i class="bi bi-search me-1"></i> Filter
+                    </button>
+                    <a href="{% url 'accounts:user_list' %}" class="btn btn-sm btn-outline-secondary">
+                        Reset
+                    </a>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div class="card shadow">
+        <div class="card-body">
+            {% if users %}
+            <div class="table-responsive">
+                <table class="table table-hover align-middle">
+                    <thead>
+                        <tr>
+                            <th>Username</th>
+                            <th>Nama Lengkap</th>
+                            <th>Role / Peran</th>
+                            <th>Identitas</th>
+                            <th>Status</th>
+                            <th>Aksi</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for u in users %}
+                        <tr>
+                            <td>
+                                <strong>{{ u.username }}</strong>
+                                {% if u.email %}<br><small class="text-muted">{{ u.email }}</small>{% endif %}
+                            </td>
+                            <td>{{ u.get_full_name|default:"-" }}</td>
+                            <td>
+                                <span class="badge bg-{% if u.is_admin %}primary{% elif u.is_kepala_madrasah %}warning text-dark{% elif u.is_petugas_pengaduan %}info text-dark{% elif u.is_petugas_barang %}success{% else %}secondary{% endif %}">
+                                    {{ u.get_role_display }}
+                                </span>
+                            </td>
+                            <td>{{ u.nip_nisn|default:"-" }}</td>
+                            <td>
+                                {% if u.is_active %}
+                                    <span class="badge bg-success">Aktif</span>
+                                {% else %}
+                                    <span class="badge bg-danger">Nonaktif</span>
+                                {% endif %}
+                            </td>
+                            <td>
+                                <div class="btn-group btn-group-sm" role="group">
+                                    <a href="{% url 'accounts:user_edit' pk=u.pk %}" class="btn btn-outline-warning" title="Edit Akun">
+                                        <i class="bi bi-pencil"></i>
+                                    </a>
+                                    <a href="{% url 'accounts:user_reset_password' pk=u.pk %}" class="btn btn-outline-secondary" title="Reset Password">
+                                        <i class="bi bi-key"></i>
+                                    </a>
+                                    {% if u != request.user %}
+                                        <form action="{% url 'accounts:user_toggle_aktif' pk=u.pk %}" method="post" class="d-inline">
+                                            {% csrf_token %}
+                                            <button type="submit" class="btn btn-sm {% if u.is_active %}btn-outline-danger{% else %}btn-outline-success{% endif %}" title="{% if u.is_active %}Nonaktifkan Akun{% else %}Aktifkan Akun{% endif %}">
+                                                <i class="bi bi-power"></i>
+                                            </button>
+                                        </form>
+                                        <a href="{% url 'accounts:user_hapus' pk=u.pk %}" class="btn btn-outline-danger" title="Hapus Akun">
+                                            <i class="bi bi-trash"></i>
+                                        </a>
+                                    {% endif %}
+                                </div>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+
+            {% if is_paginated %}
+            <nav aria-label="Page navigation" class="mt-4">
+                <ul class="pagination pagination-sm justify-content-center">
+                    {% if page_obj.has_previous %}
+                        <li class="page-item"><a class="page-link" href="?page={{ page_obj.previous_page_number }}{% if query %}&q={{ query }}{% endif %}{% if selected_role %}&role={{ selected_role }}{% endif %}{% if selected_status %}&status={{ selected_status }}{% endif %}">Sebelumnya</a></li>
+                    {% endif %}
+                    <li class="page-item active"><span class="page-link">Halaman {{ page_obj.number }} dari {{ page_obj.paginator.num_pages }}</span></li>
+                    {% if page_obj.has_next %}
+                        <li class="page-item"><a class="page-link" href="?page={{ page_obj.next_page_number }}{% if query %}&q={{ query }}{% endif %}{% if selected_role %}&role={{ selected_role }}{% endif %}{% if selected_status %}&status={{ selected_status }}{% endif %}">Selanjutnya</a></li>
+                    {% endif %}
+                </ul>
+            </nav>
+            {% endif %}
+
+            {% else %}
+            <div class="empty-state">
+                <i class="bi bi-people"></i>
+                <p>Tidak ada pengguna yang cocok dengan kriteria pencarian.</p>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}

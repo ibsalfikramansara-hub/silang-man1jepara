@@ -1,0 +1,60 @@
+﻿{% extends 'base.html' %}
+{% block title %}Pengaduan Masuk - SILANG MAN 1 Jepara{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h2><i class="bi bi-check2-square me-2"></i>Pengaduan yang Ditangani</h2>
+    <div class="card shadow">
+        <div class="card-body">
+            {% if pengaduan_list %}
+            <div class="table-responsive">
+                <table class="table table-hover align-middle">
+                    <thead>
+                        <tr>
+                            <th>Judul</th>
+                            <th>Pelapor</th>
+                            <th>Kategori</th>
+                            <th>Status</th>
+                            <th>Prioritas</th>
+                            <th>Tanggal</th>
+                            <th>Aksi</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for p in pengaduan_list %}
+                        <tr>
+                            <td>{{ p.judul }}</td>
+                            <td>
+                                {% if p.is_anonim %}Anonim{% else %}{{ p.pelapor.username }}{% endif %}
+                            </td>
+                            <td>{{ p.kategori.nama }}</td>
+                            <td>
+                                <span class="badge bg-{% if p.status == 'selesai' %}success{% elif p.status == 'eskalasi' %}warning{% elif p.status == 'dalam_penanganan' %}info{% else %}secondary{% endif %}">
+                                    {{ p.get_status_display }}
+                                </span>
+                            </td>
+                            <td>
+                                <span class="badge bg-{% if p.prioritas == 'tinggi' %}danger{% elif p.prioritas == 'sedang' %}warning{% else %}info{% endif %}">
+                                    {{ p.get_prioritas_display }}
+                                </span>
+                            </td>
+                            <td>{{ p.tanggal_diajukan|date:"d M Y" }}</td>
+                            <td>
+                                <a href="{% url 'pengaduan:pengaduan_petugas_detail' pk=p.pk %}" class="btn btn-sm btn-outline-primary">Lihat & Tangani</a>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            {% else %}
+            <div class="empty-state">
+                <i class="bi bi-check-all"></i>
+                <p>Tidak ada pengaduan yang perlu ditangani.</p>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}
+

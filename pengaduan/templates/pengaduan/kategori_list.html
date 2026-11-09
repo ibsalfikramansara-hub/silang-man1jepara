@@ -1,0 +1,76 @@
+{% extends 'base.html' %}
+{% block title %}Kategori Pengaduan - SILANG MAN 1 Jepara{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h2><i class="bi bi-tags me-2"></i>Manajemen Kategori Pengaduan</h2>
+            <p class="text-muted mb-0">Atur kategori kritik/saran, SLA batas waktu respon, dan penanggung jawab unit.</p>
+        </div>
+        <a href="{% url 'pengaduan:kategori_tambah' %}" class="btn btn-primary">
+            <i class="bi bi-plus-circle me-1"></i> Tambah Kategori
+        </a>
+    </div>
+
+    <div class="card shadow">
+        <div class="card-body">
+            {% if kategori_list %}
+            <div class="table-responsive">
+                <table class="table table-hover align-middle">
+                    <thead>
+                        <tr>
+                            <th>Nama Kategori</th>
+                            <th>Deskripsi</th>
+                            <th>Petugas Penanggung Jawab</th>
+                            <th>SLA (Jam)</th>
+                            <th>Status</th>
+                            <th>Aksi</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for k in kategori_list %}
+                        <tr>
+                            <td><strong>{{ k.nama }}</strong></td>
+                            <td>{{ k.deskripsi|default:"-" }}</td>
+                            <td>
+                                {% if k.petugas_penanggung_jawab %}
+                                    <span class="badge bg-info text-dark">
+                                        <i class="bi bi-person me-1"></i>{{ k.petugas_penanggung_jawab.get_full_name|default:k.petugas_penanggung_jawab.username }}
+                                    </span>
+                                {% else %}
+                                    <span class="text-muted small">Belum ditentukan</span>
+                                {% endif %}
+                            </td>
+                            <td>{{ k.sla_jam }} jam</td>
+                            <td>
+                                {% if k.is_active %}
+                                    <span class="badge bg-success">Aktif</span>
+                                {% else %}
+                                    <span class="badge bg-secondary">Nonaktif</span>
+                                {% endif %}
+                            </td>
+                            <td>
+                                <a href="{% url 'pengaduan:kategori_edit' pk=k.pk %}" class="btn btn-sm btn-outline-warning" title="Edit Kategori">
+                                    <i class="bi bi-pencil"></i>
+                                </a>
+                                <a href="{% url 'pengaduan:kategori_hapus' pk=k.pk %}" class="btn btn-sm btn-outline-danger" title="Hapus Kategori">
+                                    <i class="bi bi-trash"></i>
+                                </a>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            {% else %}
+            <div class="empty-state">
+                <i class="bi bi-tags"></i>
+                <p>Belum ada kategori pengaduan terdaftar.</p>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}
+

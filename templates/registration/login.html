@@ -1,0 +1,60 @@
+{% extends 'base.html' %}
+{% block title %}Masuk - SILANG MAN 1 Jepara{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-md-6 col-lg-5">
+            <div class="text-center mb-3">
+                <h3 class="fw-bold text-primary mb-1">SILANG</h3>
+                <p class="text-muted small">Sistem Informasi Laporan Barang Hilang MAN 1 Jepara</p>
+            </div>
+            <div class="card shadow">
+                <div class="card-header bg-primary text-white text-center py-3">
+                    <h5 class="mb-0"><i class="bi bi-box-arrow-in-right me-2"></i>Masuk ke Sistem</h5>
+                </div>
+                <div class="card-body p-4">
+                    {% if form.errors %}
+                        <div class="alert alert-danger">
+                            Username atau password yang Anda masukkan tidak sesuai.
+                        </div>
+                    {% endif %}
+
+                    <form method="post" novalidate>
+                        {% csrf_token %}
+                        <div class="mb-3">
+                            <label for="id_username" class="form-label">Username / Email</label>
+                            {{ form.username }}
+                            {% if form.username.errors %}
+                                <div class="text-danger small">{{ form.username.errors }}</div>
+                            {% endif %}
+                        </div>
+                        <div class="mb-3">
+                            <label for="id_password" class="form-label">Password</label>
+                            {{ form.password }}
+                            {% if form.password.errors %}
+                                <div class="text-danger small">{{ form.password.errors }}</div>
+                            {% endif %}
+                        </div>
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <div class="form-check">
+                                <input type="checkbox" name="remember" id="remember" class="form-check-input">
+                                <label for="remember" class="form-check-label">Ingat saya</label>
+                            </div>
+                        </div>
+                        <button type="submit" class="btn btn-primary w-100 py-2">
+                            <i class="bi bi-box-arrow-in-right me-2"></i>Masuk
+                        </button>
+                    </form>
+
+                    <div class="mt-3 text-center">
+                        <p class="small text-muted mb-0">
+                            Tidak memiliki akun? Silakan hubungi Admin/TU untuk pembuatan akun.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

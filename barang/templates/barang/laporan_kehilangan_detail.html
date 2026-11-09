@@ -1,0 +1,75 @@
+﻿{% extends 'base.html' %}
+{% block title %}Detail Laporan Kehilangan - SILANG MAN 1 Jepara{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="d-flex justify-content-between align-items-start mb-4">
+        <div>
+            <h2>{{ laporan.nama_barang }}</h2>
+            <p class="text-muted small">
+                Diajukan: {{ laporan.tanggal_diajukan|date:"d M Y H:i" }} | 
+                Status: 
+                <span class="badge bg-{% if laporan.status == 'selesai' %}success{% elif laporan.status == 'ditemukan' %}info{% else %}secondary{% endif %}">
+                    {{ laporan.get_status_display }}
+                </span>
+            </p>
+        </div>
+        <a href="{% url 'barang:barang_laporan_kehilangan_list' %}" class="btn btn-sm btn-outline-secondary">Kembali</a>
+    </div>
+
+    <div class="row">
+        <div class="col-md-8">
+            <div class="card shadow mb-4">
+                <div class="card-header bg-light">
+                    <h5 class="mb-0"><i class="bi bi-card-text me-2"></i>Deskripsi Barang</h5>
+                </div>
+                <div class="card-body">
+                    <p>{{ laporan.deskripsi|linebreaksbr }}</p>
+                </div>
+            </div>
+
+            {% if laporan.foto_referensi %}
+            <div class="card shadow mb-4">
+                <div class="card-header bg-light">
+                    <h5 class="mb-0"><i class="bi bi-image me-2"></i>Foto Referensi</h5>
+                </div>
+                <div class="card-body text-center">
+                    <img src="{{ laporan.foto_referensi.url }}" alt="{{ laporan.nama_barang }}" class="img-fluid rounded border" style="max-height: 400px; object-fit: contain;">
+                </div>
+            </div>
+            {% endif %}
+        </div>
+
+        <div class="col-md-4">
+            <div class="card shadow">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="mb-0"><i class="bi bi-info-circle me-2"></i>Informasi Laporan</h5>
+                </div>
+                <div class="card-body">
+                    <p><strong>Pelapor:</strong> {{ laporan.pelapor.get_full_name|default:laporan.pelapor.username }}</p>
+                    <p><strong>Lokasi Terakhir Terlihat:</strong> {{ laporan.lokasi_terakhir_terlihat }}</p>
+                    <p><strong>Tanggal Terakhir Terlihat:</strong> {{ laporan.tanggal_terakhir_terlihat|date:"d M Y" }}</p>
+                    <p><strong>Tanggal Diajukan:</strong> {{ laporan.tanggal_diajukan|date:"d M Y H:i" }}</p>
+                </div>
+            </div>
+
+            {% if laporan.barang_cocok %}
+            <div class="card shadow mt-3 border-success">
+                <div class="card-header bg-success text-white">
+                    <h5 class="mb-0"><i class="bi bi-check-circle me-2"></i>Barang Cocok Ditemukan</h5>
+                </div>
+                <div class="card-body">
+                    <p>Sistem menemukan kecocokan dengan barang temuan:</p>
+                    <p><strong>{{ laporan.barang_cocok.nama_barang }}</strong></p>
+                    <p class="text-muted small">Lokasi ditemukan: {{ laporan.barang_cocok.lokasi_ditemukan }}</p>
+                    <a href="{% url 'barang:klaim_barang' barang_id=laporan.barang_cocok.pk %}" class="btn btn-success btn-sm">
+                        <i class="bi bi-hand-index-thumb me-1"></i> Ajukan Klaim
+                    </a>
+                </div>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}
+

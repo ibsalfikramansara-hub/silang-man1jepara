@@ -1,0 +1,205 @@
+{% extends 'base.html' %}
+{% block title %}Laporan Rekapitulasi & Statistik - SILANG MAN 1 Jepara{% endblock %}
+
+{% block extra_css %}
+<style>
+@media print {
+    nav, footer, .no-print, .btn, form {
+        display: none !important;
+    }
+    body {
+        background-color: #fff !important;
+        font-size: 11pt;
+    }
+    .card {
+        box-shadow: none !important;
+        border: 1px solid #ccc !important;
+    }
+    .print-only {
+        display: block !important;
+    }
+}
+.print-only {
+    display: none;
+}
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <!-- Kop Resmi Cetak (Hanya Muncul Saat Print) -->
+    <div class="print-only text-center mb-4 pb-3 border-bottom border-2 border-dark">
+        <h4 class="mb-0 fw-bold">KEMENTERIAN AGAMA REPUBLIK INDONESIA</h4>
+        <h3 class="mb-0 fw-bold">MADRASAH ALIYAH NEGERI 1 JEPARA</h3>
+        <p class="mb-0 small text-muted">Jl. Bawu - Batealit Km. 07 Bawu Batealit Jepara, Jawa Tengah</p>
+        <p class="mb-0 small fw-bold mt-2">LAPORAN REKAPITULASI PENGADUAN & BARANG HILANG (SILANG)</p>
+        <p class="mb-0 small">Periode: {% if dari_tgl %}{{ dari_tgl }}{% else %}Awal{% endif %} s.d. {% if sampai_tgl %}{{ sampai_tgl }}{% else %}Sekarang{% endif %} | Dicetak: {{ tgl_cetak|date:"d F Y H:i" }}</p>
+    </div>
+
+    <!-- Header & Filter Form (No Print) -->
+    <div class="d-flex justify-content-between align-items-center mb-4 no-print">
+        <div>
+            <h2><i class="bi bi-file-earmark-bar-graph me-2"></i>Laporan Rekapitulasi & Statistik</h2>
+            <p class="text-muted mb-0">Rekapitulasi periodik pengaduan, evaluasi tindak lanjut, dan sirkulasi barang temuan/hilang.</p>
+        </div>
+        <div class="d-flex gap-2">
+            <button onclick="window.print()" class="btn btn-success">
+                <i class="bi bi-printer me-1"></i> Cetak Laporan / PDF
+            </button>
+            <a href="{% url 'accounts:dashboard' %}" class="btn btn-outline-secondary">
+                <i class="bi bi-arrow-left me-1"></i> Dashboard
+            </a>
+        </div>
+    </div>
+
+    <!-- Filter Periode (No Print) -->
+    <div class="card shadow-sm mb-4 no-print">
+        <div class="card-body">
+            <form method="get" class="row g-3 align-items-end">
+                <div class="col-md-4">
+                    <label class="form-label small fw-semibold">Dari Tanggal</label>
+                    <input type="date" name="dari" value="{{ dari_tgl }}" class="form-control form-control-sm">
+                </div>
+                <div class="col-md-4">
+                    <label class="form-label small fw-semibold">Sampai Tanggal</label>
+                    <input type="date" name="sampai" value="{{ sampai_tgl }}" class="form-control form-control-sm">
+                </div>
+                <div class="col-md-4 d-flex gap-2">
+                    <button type="submit" class="btn btn-sm btn-primary flex-fill">
+                        <i class="bi bi-funnel me-1"></i> Terapkan Periode
+                    </button>
+                    <a href="{% url 'pengaduan:laporan_rekap' %}" class="btn btn-sm btn-outline-secondary">
+                        Reset
+                    </a>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Ringkasan Statistik Pengaduan -->
+    <h5 class="fw-bold mb-3"><i class="bi bi-chat-text text-primary me-2"></i>Statistik Pengaduan (Kritik & Saran)</h5>
+    <div class="row g-3 mb-4">
+        <div class="col-6 col-md-3">
+            <div class="card border-0 bg-primary text-white text-center p-3">
+                <div class="fs-3 fw-bold">{{ total_pengaduan }}</div>
+                <small>Total Pengaduan Masuk</small>
+            </div>
+        </div>
+        <div class="col-6 col-md-3">
+            <div class="card border-0 bg-success text-white text-center p-3">
+                <div class="fs-3 fw-bold">{{ pengaduan_selesai }}</div>
+                <small>Selesai Ditangani</small>
+            </div>
+        </div>
+        <div class="col-6 col-md-2">
+            <div class="card border-0 bg-info text-white text-center p-3">
+                <div class="fs-3 fw-bold">{{ pengaduan_proses }}</div>
+                <small>Dalam Penanganan</small>
+            </div>
+        </div>
+        <div class="col-6 col-md-2">
+            <div class="card border-0 bg-warning text-dark text-center p-3">
+                <div class="fs-3 fw-bold">{{ pengaduan_eskalasi }}</div>
+                <small>Kasus Eskalasi</small>
+            </div>
+        </div>
+        <div class="col-6 col-md-2">
+            <div class="card border-0 bg-secondary text-white text-center p-3">
+                <div class="fs-3 fw-bold">{% if avg_rating %}{{ avg_rating|floatformat:1 }} / 5{% else %}-{% endif %}</div>
+                <small>Rata-rata Rating</small>
+            </div>
+        </div>
+    </div>
+
+    <!-- Ringkasan Statistik Barang -->
+    <h5 class="fw-bold mb-3"><i class="bi bi-box-seam text-success me-2"></i>Statistik Barang Hilang & Temuan</h5>
+    <div class="row g-3 mb-4">
+        <div class="col-6 col-md-3">
+            <div class="card border-0 bg-light text-center p-3 border">
+                <div class="fs-3 fw-bold text-dark">{{ total_barang_temuan }}</div>
+                <small class="text-muted">Total Barang Ditemukan</small>
+            </div>
+        </div>
+        <div class="col-6 col-md-3">
+            <div class="card border-0 bg-light text-center p-3 border">
+                <div class="fs-3 fw-bold text-success">{{ barang_selesai }}</div>
+                <small class="text-muted">Berhasil Dikembalikan</small>
+            </div>
+        </div>
+        <div class="col-6 col-md-3">
+            <div class="card border-0 bg-light text-center p-3 border">
+                <div class="fs-3 fw-bold text-warning">{{ total_laporan_kehilangan }}</div>
+                <small class="text-muted">Laporan Kehilangan</small>
+            </div>
+        </div>
+        <div class="col-6 col-md-3">
+            <div class="card border-0 bg-light text-center p-3 border">
+                <div class="fs-3 fw-bold text-info">{{ klaim_terverifikasi }} / {{ total_klaim }}</div>
+                <small class="text-muted">Klaim Terverifikasi</small>
+            </div>
+        </div>
+    </div>
+
+    <!-- Tabel Rekapitulasi Pengaduan Terkini -->
+    <div class="card shadow-sm mb-4">
+        <div class="card-header bg-white py-3">
+            <h6 class="mb-0 fw-bold"><i class="bi bi-table me-2"></i>Rekapitulasi Pengaduan pada Periode Ini</h6>
+        </div>
+        <div class="card-body p-0">
+            <div class="table-responsive">
+                <table class="table table-striped table-bordered table-sm mb-0 align-middle">
+                    <thead class="table-light">
+                        <tr>
+                            <th width="5%">No</th>
+                            <th>Tanggal</th>
+                            <th>Judul Pengaduan</th>
+                            <th>Kategori</th>
+                            <th>Pelapor</th>
+                            <th>Petugas</th>
+                            <th>Status</th>
+                            <th>Kepuasan</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for p in pengaduan_list %}
+                        <tr>
+                            <td class="text-center">{{ forloop.counter }}</td>
+                            <td>{{ p.tanggal_diajukan|date:"d/m/Y H:i" }}</td>
+                            <td><strong>{{ p.judul }}</strong></td>
+                            <td>{{ p.kategori.nama }}</td>
+                            <td>{% if p.is_anonim %}<em>Anonim</em>{% else %}{{ p.pelapor.get_full_name|default:p.pelapor.username }}{% endif %}</td>
+                            <td>{{ p.petugas_penanganan.get_full_name|default:p.petugas_penanganan.username|default:"-" }}</td>
+                            <td><span class="badge bg-secondary">{{ p.get_status_display }}</span></td>
+                            <td class="text-center">{% if p.rating_kepuasan %}{{ p.rating_kepuasan }} ★{% else %}-{% endif %}</td>
+                        </tr>
+                        {% empty %}
+                        <tr>
+                            <td colspan="8" class="text-center py-3 text-muted">Tidak ada data pengaduan pada periode ini.</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- Tanda Tangan Cetak (Print Only) -->
+    <div class="print-only mt-5 pt-4">
+        <div class="row">
+            <div class="col-6 text-center">
+                <p class="mb-5">Mengetahui,<br><strong>Kepala MAN 1 Jepara</strong></p>
+                <br>
+                <p class="mb-0 text-decoration-underline fw-bold">Dr. H. Muzammil, M.Ag.</p>
+                <small>NIP. 197205101998031002</small>
+            </div>
+            <div class="col-6 text-center">
+                <p class="mb-5">Jepara, {{ tgl_cetak|date:"d F Y" }}<br><strong>Administrator Sistem SILANG</strong></p>
+                <br>
+                <p class="mb-0 text-decoration-underline fw-bold">{{ request.user.get_full_name|default:request.user.username }}</p>
+                <small>NIP / Identitas: {{ request.user.nip_nisn|default:"-" }}</small>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+

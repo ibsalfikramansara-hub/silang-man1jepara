@@ -1,0 +1,72 @@
+{% extends 'base.html' %}
+{% block title %}Profil - SILANG MAN 1 Jepara{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card shadow">
+                <div class="card-header bg-primary text-white">
+                    <h4 class="mb-0"><i class="bi bi-person me-2"></i>Profil Saya</h4>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-4 text-center mb-3">
+                            <i class="bi bi-person-circle fs-1 text-primary"></i>
+                            <p class="mb-0">{{ profile_user.get_full_name|default:profile_user.username }}</p>
+                            <span class="badge bg-light text-dark">{{ profile_user.get_role_display }}</span>
+                        </div>
+                        <div class="col-md-8">
+                            <table class="table table-borderless">
+                                <tr>
+                                    <th width="30%">Username</th>
+                                    <td>{{ profile_user.username }}</td>
+                                </tr>
+                                <tr>
+                                    <th>Nama Lengkap</th>
+                                    <td>{{ profile_user.get_full_name|default:"-" }}</td>
+                                </tr>
+                                <tr>
+                                    <th>Email</th>
+                                    <td>{{ profile_user.email|default:"-" }}</td>
+                                </tr>
+                                <tr>
+                                    <th>NIS / NISN / NIP</th>
+                                    <td>{{ profile_user.nip_nisn|default:"-" }}</td>
+                                </tr>
+                                <tr>
+                                    <th>Telepon</th>
+                                    <td>{{ profile_user.telepon|default:"-" }}</td>
+                                </tr>
+                                <tr>
+                                    <th>Instansi / Unit</th>
+                                    <td>{{ profile_user.instansi_unit|default:"-" }}</td>
+                                </tr>
+                                <tr>
+                                    <th>Status Akun</th>
+                                    <td>
+                                        {% if profile_user.is_active %}
+                                            <span class="badge bg-success">Aktif</span>
+                                        {% else %}
+                                            <span class="badge bg-danger">Nonaktif</span>
+                                        {% endif %}
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th>Terdaftar Sejak</th>
+                                    <td>{{ profile_user.date_joined|date:"d M Y H:i" }}</td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-footer d-flex justify-content-between">
+                    <a href="{% url 'accounts:dashboard' %}" class="btn btn-outline-secondary"><i class="bi bi-arrow-left me-1"></i> Kembali ke Dashboard</a>
+                    <a href="{% url 'accounts:password_change' %}" class="btn btn-outline-primary"><i class="bi bi-key me-1"></i> Ubah Password</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+

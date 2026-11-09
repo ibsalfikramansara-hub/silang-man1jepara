@@ -1,0 +1,65 @@
+{% extends 'base.html' %}
+{% block title %}Daftar Barang Temuan - SILANG MAN 1 Jepara{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h2><i class="bi bi-box-seam me-2"></i>Manajemen Barang Temuan</h2>
+    <div class="card shadow">
+        <div class="card-body">
+            {% if barang_list %}
+            <div class="table-responsive">
+                <table class="table table-hover align-middle">
+                    <thead>
+                        <tr>
+                            <th>Nama Barang</th>
+                            <th>Lokasi Ditemukan</th>
+                            <th>Tanggal Ditemukan</th>
+                            <th>Status</th>
+                            <th>Publikasi</th>
+                            <th>Aksi</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for b in barang_list %}
+                        <tr>
+                            <td>{{ b.nama_barang }}</td>
+                            <td>{{ b.lokasi_ditemukan }}</td>
+                            <td>{{ b.tanggal_ditemukan|date:"d M Y" }}</td>
+                            <td>
+                                <span class="badge bg-{% if b.status == 'dipublikasikan' %}info{% elif b.status == 'diklaim_menunggu_verifikasi' %}warning{% elif b.status == 'terverifikasi_diserahkan' %}success{% elif b.status == 'selesai' %}dark{% else %}secondary{% endif %}">
+                                    {{ b.get_status_display }}
+                                </span>
+                            </td>
+                            <td>
+                                <form action="{% url 'barang:barang_temuan_toggle_publikasi' pk=b.pk %}" method="post" class="d-inline">
+                                    {% csrf_token %}
+                                    <button type="submit" class="btn btn-sm {% if b.dipublikasikan %}btn-outline-success{% else %}btn-outline-secondary{% endif %}" title="Klik untuk ubah status tayang di Papan Temuan">
+                                        {% if b.dipublikasikan %}
+                                            <i class="bi bi-eye me-1"></i> Ditampilkan
+                                        {% else %}
+                                            <i class="bi bi-eye-slash me-1"></i> Disembunyikan
+                                        {% endif %}
+                                    </button>
+                                </form>
+                            </td>
+                            <td>
+                                <a href="{% url 'barang:barang_temuan_detail' pk=b.pk %}" class="btn btn-sm btn-outline-primary">Lihat</a>
+                                <a href="{% url 'barang:barang_temuan_edit' pk=b.pk %}" class="btn btn-sm btn-outline-warning">Edit</a>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            {% else %}
+            <div class="empty-state">
+                <i class="bi bi-box"></i>
+                <p>Belum ada barang temuan tercatat.</p>
+                <a href="{% url 'barang:barang_temuan_input' %}" class="btn btn-success">Input Barang Temuan</a>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}
+

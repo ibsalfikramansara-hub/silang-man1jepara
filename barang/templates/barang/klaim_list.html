@@ -1,0 +1,44 @@
+﻿{% extends 'base.html' %}
+{% block title %}Daftar Klaim Barang - SILANG MAN 1 Jepara{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h2><i class="bi bi-hand-index-thumb me-2"></i>Klaim Barang Menunggu Verifikasi</h2>
+    <div class="card shadow">
+        <div class="card-body">
+            {% if klaim_list %}
+            <div class="table-responsive">
+                <table class="table table-hover align-middle">
+                    <thead>
+                        <tr>
+                            <th>Barang</th>
+                            <th>Diaklim Oleh</th>
+                            <th>Tanggal Klaim</th>
+                            <th>Aksi</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for k in klaim_list %}
+                        <tr>
+                            <td>{{ k.barang_temuan.nama_barang }}</td>
+                            <td>{{ k.pelapor.username }}</td>
+                            <td>{{ k.tanggal_klaim|date:"d M Y H:i" }}</td>
+                            <td>
+                                <a href="{% url 'barang:barang_klaim_detail' pk=k.pk %}" class="btn btn-sm btn-outline-primary">Verifikasi</a>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            {% else %}
+            <div class="empty-state">
+                <i class="bi bi-check-circle"></i>
+                <p>Tidak ada klaim yang menunggu verifikasi.</p>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}
+

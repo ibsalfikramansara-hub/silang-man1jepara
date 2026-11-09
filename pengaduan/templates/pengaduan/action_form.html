@@ -1,0 +1,49 @@
+﻿{% extends 'base.html' %}
+{% block title %}Tindak Lanjuti Pengaduan - SILANG MAN 1 Jepara{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card shadow">
+                <div class="card-header bg-primary text-white">
+                    <h4 class="mb-0"><i class="bi bi-pencil-square me-2"></i>Tindak Lanjuti Pengaduan</h4>
+                </div>
+                <div class="card-body">
+                    <form method="post">
+                        {% csrf_token %}
+                        <div class="mb-3">
+                            <label for="id_status" class="form-label">Status Baru <span class="text-danger">*</span></label>
+                            {{ form.status }}
+                            {% if form.status.errors %}
+                                <div class="text-danger small">{{ form.status.errors }}</div>
+                            {% endif %}
+                        </div>
+                        <div class="mb-3">
+                            <label for="id_petugas_penanganan" class="form-label">Petugas Penanganan</label>
+                            {{ form.petugas_penanganan }}
+                            {% if form.petugas_penanganan.errors %}
+                                <div class="text-danger small">{{ form.petugas_penanganan.errors }}</div>
+                            {% endif %}
+                        </div>
+                        <div class="mb-3">
+                            <label for="id_catatan_petugas" class="form-label">Catatan Penanganan</label>
+                            {{ form.catatan_petugas }}
+                            {% if form.catatan_petugas.errors %}
+                                <div class="text-danger small">{{ form.catatan_petugas.errors }}</div>
+                            {% endif %}
+                        </div>
+                        <div class="d-flex justify-content-between mt-4">
+                            <a href="{% url 'pengaduan:pengaduan_petugas_detail' pk=object.pk %}" class="btn btn-outline-secondary">Batal</a>
+                            <button type="submit" class="btn btn-primary">
+                                <i class="bi bi-save me-1"></i> Simpan Perubahan
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+

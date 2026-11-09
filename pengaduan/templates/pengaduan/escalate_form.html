@@ -1,0 +1,39 @@
+﻿{% extends 'base.html' %}
+{% block title %}Eskalasi Pengaduan - SILANG MAN 1 Jepara{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card shadow border-warning">
+                <div class="card-header bg-warning text-dark">
+                    <h4 class="mb-0"><i class="bi bi-exclamation-triangle me-2"></i>Eskalasi ke Kepala Madrasah</h4>
+                </div>
+                <div class="card-body">
+                    <p class="text-muted">
+                        Pengaduan ini akan ditransfer kepada Kepala Madrasah untuk penanganan lanjutan. 
+                        Status akan diubah menjadi <strong>Eskalasi</strong>.
+                    </p>
+                    <form method="post">
+                        {% csrf_token %}
+                        <div class="mb-3">
+                            <label for="id_catatan_petugas" class="form-label">Alasan Eskalasi</label>
+                            {{ form.catatan_petugas }}
+                            {% if form.catatan_petugas.errors %}
+                                <div class="text-danger small">{{ form.catatan_petugas.errors }}</div>
+                            {% endif %}
+                        </div>
+                        <div class="d-flex justify-content-between mt-4">
+                            <a href="{% url 'pengaduan:pengaduan_petugas_detail' pk=object.pk %}" class="btn btn-outline-secondary">Batal</a>
+                            <button type="submit" class="btn btn-warning">
+                                <i class="bi bi-arrow-up-right me-1"></i> Eskalasi Sekarang
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+

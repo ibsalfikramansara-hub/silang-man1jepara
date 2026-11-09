@@ -1,0 +1,82 @@
+﻿{% extends 'base.html' %}
+{% block title %}{{ action|default:'Input Barang Temuan' }} - SILANG MAN 1 Jepara{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card shadow">
+                <div class="card-header bg-success text-white">
+                    <h4 class="mb-0">
+                        <i class="bi bi-box-seam me-2"></i>{{ action|default:'Input Barang Temuan' }}
+                    </h4>
+                </div>
+                <div class="card-body">
+                    <form method="post" enctype="multipart/form-data" novalidate>
+                        {% csrf_token %}
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="id_nama_barang" class="form-label">Nama Barang <span class="text-danger">*</span></label>
+                                {{ form.nama_barang }}
+                                {% if form.nama_barang.errors %}
+                                    <div class="text-danger small">{{ form.nama_barang.errors }}</div>
+                                {% endif %}
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="id_lokasi_pos" class="form-label">Lokasi / Pos Penitipan</label>
+                                {{ form.lokasi_pos }}
+                                {% if form.lokasi_pos.errors %}
+                                    <div class="text-danger small">{{ form.lokasi_pos.errors }}</div>
+                                {% endif %}
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label for="id_deskripsi" class="form-label">Deskripsi Barang <span class="text-danger">*</span></label>
+                            {{ form.deskripsi }}
+                            {% if form.deskripsi.errors %}
+                                <div class="text-danger small">{{ form.deskripsi.errors }}</div>
+                            {% endif %}
+                            <small class="form-text text-muted">Sebutkan ciri-ciri barang, warna, merek, dan karakteristik khusus.</small>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="id_lokasi_ditemukan" class="form-label">Lokasi Ditemukan <span class="text-danger">*</span></label>
+                                {{ form.lokasi_ditemukan }}
+                                {% if form.lokasi_ditemukan.errors %}
+                                    <div class="text-danger small">{{ form.lokasi_ditemukan.errors }}</div>
+                                {% endif %}
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="id_tanggal_ditemukan" class="form-label">Tanggal Ditemukan <span class="text-danger">*</span></label>
+                                {{ form.tanggal_ditemukan }}
+                                {% if form.tanggal_ditemukan.errors %}
+                                    <div class="text-danger small">{{ form.tanggal_ditemukan.errors }}</div>
+                                {% endif %}
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label for="id_foto" class="form-label">Foto Barang</label>
+                            {{ form.foto }}
+                            {% if form.foto.errors %}
+                                <div class="text-danger small">{{ form.foto.errors }}</div>
+                            {% endif %}
+                            <small class="form-text text-muted">Upload foto barang sebagai bukti temuan.</small>
+                        </div>
+                        <div class="mb-3 form-check">
+                            {{ form.dipublikasikan }}
+                            <label for="id_dipublikasikan" class="form-check-label">Tampilkan di Papan Barang Temuan (publik untuk civitas akademika)</label>
+                        </div>
+                        <div class="d-flex justify-content-between mt-4">
+                            <a href="{% url 'barang:barang_temuan_list' %}" class="btn btn-outline-secondary">Batal</a>
+                            <button type="submit" class="btn btn-success">
+                                <i class="bi bi-save me-1"></i> Simpan Barang Temuan
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
