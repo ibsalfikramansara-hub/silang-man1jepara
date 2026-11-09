@@ -106,10 +106,14 @@ if database_url:
         }
     }
 else:
+    if os.environ.get('VERCEL'):
+        db_path = Path('/tmp') / 'db.sqlite3'
+    else:
+        db_path = BASE_DIR / 'db.sqlite3'
     DATABASES = {
         'default': {
             'ENGINE': 'django.db.backends.sqlite3',
-            'NAME': BASE_DIR / 'db.sqlite3',
+            'NAME': db_path,
         }
     }
 
