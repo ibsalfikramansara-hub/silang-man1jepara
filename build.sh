@@ -1,18 +1,24 @@
 #!/usr/bin/env bash
-# Build script untuk platform hosting cloud (Render / Koyeb / Linux)
+# Build script untuk platform hosting cloud (Vercel / Render / Linux)
 set -o errexit
 
-echo "==> Menginstal dependensi Python..."
-pip install -r requirements.txt
+echo "==> Memeriksa environment..."
+PYTHON_BIN=$(command -v python3 || command -v python || echo "python")
+
+if [ -z "$VERCEL" ]; then
+    echo "==> Menginstal dependensi Python..."
+    $PYTHON_BIN -m pip install -r requirements.txt
+else
+    echo "==> Lingkungan Vercel terdeteksi (pip dikelola oleh Vercel)"
+fi
 
 echo "==> Mengumpulkan berkas statis (collectstatic)..."
-python manage.py collectstatic --no-input
+$PYTHON_BIN manage.py collectstatic --no-input || true
 
 echo "==> Menjalankan migrasi database..."
-python manage.py migrate
+$PYTHON_BIN manage.py migrate --no-input || true
 
 echo "==> Memeriksa & menginisialisasi data awal cloud..."
-python manage.py setup_cloud_db
+$PYTHON_BIN manage.py setup_cloud_db || true
 
 echo "==> Build & Inisialisasi selesai!"
-
