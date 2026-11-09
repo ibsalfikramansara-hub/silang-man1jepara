@@ -166,9 +166,9 @@
                             <td class="text-center">{{ forloop.counter }}</td>
                             <td>{{ p.tanggal_diajukan|date:"d/m/Y H:i" }}</td>
                             <td><strong>{{ p.judul }}</strong></td>
-                            <td>{{ p.kategori.nama }}</td>
-                            <td>{% if p.is_anonim %}<em>Anonim</em>{% else %}{{ p.pelapor.get_full_name|default:p.pelapor.username }}{% endif %}</td>
-                            <td>{{ p.petugas_penanganan.get_full_name|default:p.petugas_penanganan.username|default:"-" }}</td>
+                            <td>{{ p.kategori.nama|default:"-" }}</td>
+                            <td>{% if p.is_anonim %}<em>Anonim</em>{% else %}{% if p.pelapor %}{{ p.pelapor.get_full_name|default:p.pelapor.username }}{% else %}-{% endif %}{% endif %}</td>
+                            <td>{% if p.petugas_penanganan %}{{ p.petugas_penanganan.get_full_name|default:p.petugas_penanganan.username }}{% else %}-{% endif %}</td>
                             <td><span class="badge bg-secondary">{{ p.get_status_display }}</span></td>
                             <td class="text-center">{% if p.rating_kepuasan %}{{ p.rating_kepuasan }} ★{% else %}-{% endif %}</td>
                         </tr>
