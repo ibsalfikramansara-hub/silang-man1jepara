@@ -1,168 +1,128 @@
 # SILANG - Sistem Informasi Laporan Barang Hilang MAN 1 Jepara
 
-Aplikasi web berbasis Python (Django) untuk mengelola pelaporan dan klaim barang hilang/ditemukan serta pengaduan (kritik & saran) bagi civitas akademika MAN 1 Jepara.
+Aplikasi web berbasis Python (Django 4.2) untuk mengelola pelaporan dan klaim barang hilang/ditemukan serta pengaduan (kritik, saran & aspirasi) bagi civitas akademika **MAN 1 Jepara**.
 
-## Tech Stack
+---
 
-- **Backend:** Python + Django 4.2
-- **Database:** SQLite (development), dapat diganti PostgreSQL
-- **Frontend:** HTML5, CSS3, JavaScript, Bootstrap 5
-- **ORM:** Django ORM
+## 🚀 Arsitektur & Teknologi Cloud (100% Free Tier & Persisten)
 
-## Struktur Proyek
+Aplikasi dirancang dengan arsitektur **Zero-Cost Production** yang stabil, aman, dan persisten tanpa kartu kredit atau biaya langganan:
 
-```
-pengaduan_madrasah/
-├── manage.py
-├── requirements.txt
-├── db.sqlite3
-├── README.md
-├── config/                   # Konfigurasi proyek Django
-│   ├── settings.py
-│   ├── urls.py
-│   ├── wsgi.py
-│   └── asgi.py
-├── accounts/                 # Modul akun, autentikasi & role (RBAC)
-│   ├── models.py             # User kustom (5 role)
-│   ├── views.py              # Login, logout, dashboard, manajemen user
-│   ├── urls.py
-│   ├── admin.py
-│   ├── apps.py
-│   └── templates/accounts/
-│       ├── profile.html
-│       ├── user_list.html
-│       ├── user_form.html
-│       └── user_confirm_delete.html
-├── pengaduan/                # Modul pengaduan (kritik/saran)
-│   ├── models.py             # KategoriPengaduan, Pengaduan, LogTindakLanjut
-│   ├── views.py              # CRUD pengaduan, petugas, eskalasi, rating
-│   ├── urls.py
-│   ├── admin.py
-│   ├── apps.py
-│   └── templates/pengaduan/
-│       ├── form.html
-│       ├── list.html
-│       ├── detail.html
-│       ├── confirm_delete.html
-│       ├── petugas_list.html
-│       ├── petugas_detail.html
-│       ├── action_form.html
-│       ├── escalate_form.html
-│       ├── kepala_eskalasi_list.html
-│       └── rating.html
-├── barang/                   # Modul barang hilang & temuan
-│   ├── models.py             # BarangTemuan, LaporanKehilangan, Klaim, SerahTerima
-│   ├── views.py              # Input barang, papan temuan, klaim, verifikasi, serah terima
-│   ├── urls.py
-│   ├── admin.py
-│   ├── apps.py
-│   └── templates/barang/
-│       ├── form.html
-│       ├── list.html
-│       ├── detail.html
-│       ├── papan_temuan.html
-│       ├── laporan_kehilangan_form.html
-│       ├── laporan_kehilangan_list.html
-│       ├── laporan_kehilangan_detail.html
-│       ├── klaim_form.html
-│       ├── klaim_list.html
-│       ├── klaim_detail.html
-│       ├── verifikasi_klaim.html
-│       └── serah_terima_form.html
-├── templates/                # Template global
-│   ├── base.html
-│   ├── dashboard.html
-│   └── registration/login.html
-├── static/                   # Aset statis
-│   ├── css/style.css
-│   ├── js/
-│   └── images/
-└── media/                    # Unggahan pengguna
+1. **Web Application Hosting**:
+   - **Render.com** (Web Service Free Tier, Region Singapore)
+   - Dukungan native Python 3.11, WSGI Gunicorn, dan WhiteNoise static compression.
+   - Terkoneksi otomatis dengan GitHub repository (**Auto-Deploy on Git Push**).
+   - Dilengkapi sertifikat SSL HTTPS otomatis dari Let's Encrypt.
+2. **Cloud Database (Persisten Permanen)**:
+   - **Neon Tech (neon.tech)** atau **Supabase (supabase.com)**
+   - Serverless PostgreSQL (Free Tier permanen 0.5 GB, SSL terintegrasi).
+   - Database cloud dipisah total dari database SQLite lokal.
+3. **Penyajian Berkas Statis**:
+   - **WhiteNoise**: Menyajikan seluruh aset CSS, JS, dan ikon secara terkompresi langsung dari Gunicorn tanpa perlu bucket S3 berbayar.
+4. **Data Seed & Migration**:
+   - `build.sh` dan `setup_cloud_db.py` mengurus migrasi skema dan inisialisasi akun bawaan secara otomatis pada deployment pertama.
+
+---
+
+## ⚡ One-Click Deployment (`deploy.bat`)
+
+Sistem dilengkapi dengan skrip otomatisasi satu klik untuk Windows (`deploy.bat`). Anda cukup melakukan double-click pada file tersebut:
+
+```text
+==============================================================================
+      SILANG - Sistem Informasi Laporan Barang Hilang MAN 1 Jepara
+                         Pusat Manajemen Deployment
+==============================================================================
+
+  [1] Jalankan Aplikasi di Komputer Lokal (http://127.0.0.1:8000)
+  [2] ONE-CLICK DEPLOY ONLINE (Validasi, Test, Commit, dan Push ke Cloud)
+  [3] Jalankan Pengujian Otomatis (Automated Test Suite - 23 Skenario)
+  [4] Ekspor & Backup Data Database (initial_data.json)
+  [5] Keluar
+==============================================================================
 ```
 
-## Peran Pengguna (Role)
+### Keunggulan One-Click Deploy (Menu 2):
+1. **Safety Pre-Check**: Menjalankan 23 automated unit test lokal terlebih dahulu. Jika ada error, proses dihentikan otomatis untuk mencegah kode rusak naik ke cloud.
+2. **Auto Seed Export**: Mengekspor data master lokal ke `initial_data.json`.
+3. **Auto Git Commit & Push**: Melacak perubahan kode, membuat commit, dan mendorong branch `main` ke GitHub.
+4. **Auto-Trigger Cloud Build**: GitHub webhook langsung memicu Render/Koyeb untuk membuild dan mengaktifkan versi terbaru tanpa intervensi manual!
 
-| Role | Kode | Hak Akses |
-|------|------|-----------|
-| Pelapor | `pelapor` | Buat pengaduan (anonim opsi), lapor barang hilang, lihat papan temuan, ajukan klaim, rating |
-| Petugas Penanganan Pengaduan | `petugas_pengaduan` | Tindak lanjuti pengaduan, ubah status, eskalasi ke kepala |
-| Petugas Barang Hilang/Temuan | `petugas_barang` | Input barang temuan, verifikasi klaim, serah terima barang |
-| Kepala Madrasah / Pimpinan | `kepala_madrasah` | Pantau eskalasi, statistik keseluruhan |
-| Admin / TU | `admin` | Kelola pengguna, kategori, akses penuh ke admin Django |
+---
 
-## Cara Instalasi & Menjalankan Secara Lokal
+## 📋 Langkah Awal Deployment ke Internet (Setup 1 Kali)
 
-### 1. Persyaratan
-Pastikan Python 3.10+ telah terinstal.
+### Langkah 1: Buat Database Cloud Gratis (Neon.tech)
+1. Buka [https://neon.tech](https://neon.tech) dan daftar/login dengan akun GitHub atau Google (Gratis selamanya).
+2. Buat project baru dengan nama `silang-man1jepara` (pilih region terdekat: `Singapore / AWS ap-southeast-1`).
+3. Salin **Connection String** yang diberikan (format: `postgresql://user:password@ep-xxxx.neon.tech/neondb?sslmode=require`).
 
-### 2. Buat virtual environment dan aktifkan
+### Langkah 2: Buat Repositori GitHub & Push Kode
+1. Buat repositori baru di [GitHub](https://github.com/new) (beri nama misalnya `silang-man1jepara`, pilih Private atau Public).
+2. Buka PowerShell / Terminal di folder proyek ini, lalu jalankan:
+   ```powershell
+   git remote add origin https://github.com/<username-anda>/silang-man1jepara.git
+   git push -u origin main
+   ```
+   *(Atau cukup double-click `deploy.bat` dan pilih menu 2, lalu masukkan URL GitHub tersebut).*
+
+### Langkah 3: Hubungkan ke Render.com (Web Service)
+1. Buka [https://dashboard.render.com](https://dashboard.render.com) dan login dengan akun GitHub Anda.
+2. Klik tombol **New +** $\rightarrow$ pilih **Web Service**.
+3. Pilih repositori `silang-man1jepara` yang baru Anda push.
+4. Konfigurasi service (atau gunakan `render.yaml`):
+   - **Name**: `silang-man1jepara`
+   - **Region**: `Singapore`
+   - **Runtime**: `Python 3`
+   - **Build Command**: `bash build.sh`
+   - **Start Command**: `gunicorn config.wsgi:application --log-file -`
+   - **Instance Type**: `Free`
+5. Masukkan **Environment Variables**:
+   - `DATABASE_URL`: *(Tempel URL connection string Neon dari Langkah 1)*
+   - `DJANGO_SECRET_KEY`: *(Ketik kunci acak yang panjang)*
+   - `DJANGO_DEBUG`: `False`
+   - `DJANGO_ALLOWED_HOSTS`: `.onrender.com`
+   - `CSRF_TRUSTED_ORIGINS`: `https://*.onrender.com`
+   - `SECURE_SSL_REDIRECT`: `True`
+6. Klik **Create Web Service**. Render akan otomatis menginstal dependensi, menjalankan migrasi database Neon, menginisialisasi akun bawaan, dan menampilkan URL publik Anda:
+   `https://silang-man1jepara.onrender.com`
+
+---
+
+## 🔐 Akun Bawaan (Default Seed Data)
+
+Setelah deployment berhasil, seluruh akun dan role siap digunakan secara langsung:
+
+| Role | Username | Password Bawaan | Hak Akses Utama |
+|---|---|---|---|
+| **Admin** | `admin` | `admin123` | Kendali penuh, User Management, Kategori, Pos, Rekapitulasi |
+| **Petugas Pengaduan** | `petugas_pengaduan` | `password123` | Penanganan laporan pengaduan, eskalasi ke pimpinan |
+| **Petugas Barang** | `petugas_barang` | `password123` | Input temuan, Papan temuan, verifikasi klaim, Berita Acara |
+| **Kepala Madrasah** | `kepala_madrasah` | `password123` | Monitoring statistik, penanganan kasus eskalasi |
+| **Pelapor (Siswa)** | `pelapor` | `password123` | Buat laporan pengaduan/kehilangan, klaim barang, rating |
+
+> **Catatan Keamanan:** Setelah login pertama kali di lingkungan online, silakan ubah password akun `admin` melalui menu **Profil $\rightarrow$ Ubah Password**.
+
+---
+
+## 🛡️ Kebijakan Keamanan & Backup Data
+
+1. **Pemisahan Database**:
+   - File `db.sqlite3` di komputer lokal tidak pernah terunggah ke repositori online (terlindungi oleh `.gitignore`).
+   - Server cloud hanya terhubung ke PostgreSQL cloud via environment variable `DATABASE_URL`.
+2. **Kerahasiaan Kredensial**:
+   - Kunci rahasia dan password database dikonfigurasi melalui platform cloud environment variables, bukan hardcoded di kode sumber.
+3. **Persistensi Data**:
+   - Database PostgreSQL di Neon bersifat persisten permanen.
+   - Setiap redeployment kode **tidak akan pernah menghapus** data laporan, pengaduan, atau pengguna yang tersimpan di cloud.
+4. **Mekanisme Backup**:
+   - Gunakan menu `[4]` pada `deploy.bat` untuk mengekspor snapshot data lokal/cloud secara berkala ke berkas JSON.
+
+---
+
+## 🧪 Menjalankan Pengujian Lokal (Test Suite)
 
 ```powershell
-cd E:\PROYEK E4\Pengaduan\pengaduan_madrasah
-python -m venv venv
-venv\Scripts\Activate.ps1
+.\venv\Scripts\python.exe manage.py test
 ```
-
-### 3. Instal dependensi
-
-```powershell
-pip install -r requirements.txt
-```
-
-### 4. Migrasi database & buat superuser
-
-```powershell
-python manage.py makemigrations
-python manage.py migrate
-python manage.py createsuperuser
-```
-
-### 5. Jalankan server development
-
-```powershell
-python manage.py runserver
-```
-
-Buka browser di: `http://127.0.0.1:8000/`
-
-Admin Django: `http://127.0.0.1:8000/admin/`
-
-### Akun Default (hasil createsuperuser contoh)
-- Username: `admin`
-- Password: `admin123` (ganti setelah login pertama kali)
-
-## Alur Kerja Singkat
-
-1. **Login** → sistem mengarahkan ke dashboard sesuai role.
-2. **Pelapor** membuat pengaduan (dengan opsi anonim) atau lapor barang hilang/ditemukan.
-3. **Petugas Pengaduan** menindaklanjuti pengaduan, mengubah status, atau mengeskalasi ke Kepala Madrasah.
-4. **Petugas Barang** memverifikasi klaim kepemilikan dan mencatat serah terima barang dengan foto bukti.
-5. **Kepala Madrasah** memantau kasus eskalasi dan statistik.
-6. **Admin** mengelola pengguna, kategori, dan pengaturan sistem.
-
-## Catatan Keamanan (berdasarkan workflow)
-
-- Opsi anonim hanya untuk pengaduan; identitas tetap tersimpan di database untuk audit.
-- Laporan barang hilang/ditemukan wajib identitas asli.
-- Verifikasi kepemilikan barang wajib dilakukan sebelum serah terima.
-- Setiap perubahan status mencatat siapa dan kapan (audit trail via `LogTindakLanjutPengaduan`).
-- Hak akses dibatasi per role (RBAC) melalui `RoleRequiredMixin`.
-
-## Fitur Utama
-
-- ✅ Autentikasi & manajemen sesi (login/logout)
-- ✅ Role-Based Access Control (5 role)
-- ✅ CRUD pengaduan (create, read, update, delete)
-- ✅ CRUD barang temuan & laporan kehilangan
-- ✅ Klaim & verifikasi kepemilikan barang
-- ✅ Serah terima barang dengan foto bukti & tanda tangan digital
-- ✅ Audit trail setiap perubahan status
-- ✅ Papan barang temuan publik dengan pencarian & filter
-- ✅ Dashboard berbeda per role
-- ✅ Rating kepuasan penyelesaian pengaduan
-- ✅ Validasi form (frontend HTML5 + backend Django)
-- ✅ Penanganan error & pesan flash (messages)
-
-## Lisensi
-
-Dibangun untuk kebutuhan akademik madrasah. Silakan dikembangkan lebih lanjut.
+*Total 23 skenario uji mencakup seluruh alur bisnis, RBAC, CRUD, dan pencetakan tanda terima dengan status kelulusan 100% OK.*
