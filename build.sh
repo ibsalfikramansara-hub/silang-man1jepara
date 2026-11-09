@@ -15,3 +15,4 @@ echo "==> Memeriksa & menginisialisasi data awal cloud..."
 python manage.py setup_cloud_db
 
 echo "==> Build & Inisialisasi selesai!"
+

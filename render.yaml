@@ -21,3 +21,4 @@ services:
       # Masukkan URL database Neon / Supabase pada dashboard Render atau via env
       - key: DATABASE_URL
         sync: false
+

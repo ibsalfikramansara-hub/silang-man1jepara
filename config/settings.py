@@ -23,6 +23,7 @@ if csrf_origins:
     CSRF_TRUSTED_ORIGINS = [o.strip() for o in csrf_origins.split(',') if o.strip()]
 else:
     CSRF_TRUSTED_ORIGINS = [
+        'https://*.trycloudflare.com',
         'https://*.onrender.com',
         'https://*.koyeb.app',
         'https://*.vercel.app',

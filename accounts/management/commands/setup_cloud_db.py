@@ -42,3 +42,4 @@ class Command(BaseCommand):
             admin.role = User.ROLE_ADMIN
             admin.save()
             self.stdout.write(self.style.SUCCESS('[OK] Role admin diselaraskan ke ROLE_ADMIN.'))
+
