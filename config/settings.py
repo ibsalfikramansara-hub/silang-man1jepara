@@ -106,7 +106,8 @@ if database_url:
         }
     }
 else:
-    if os.environ.get('VERCEL'):
+    is_serverless = os.environ.get('VERCEL') or os.environ.get('VERCEL_ENV') or '/var/task' in str(BASE_DIR)
+    if is_serverless:
         db_path = Path('/tmp') / 'db.sqlite3'
     else:
         db_path = BASE_DIR / 'db.sqlite3'
